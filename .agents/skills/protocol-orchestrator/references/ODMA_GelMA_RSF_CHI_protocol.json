@@ -1,0 +1,85 @@
+{
+  "Protocol": "ODMA_GelMA_RSF_CHI_protocol",
+  "Materials": [
+    "DMA: 0.05 g",
+    "Tris-HCl:pH = 8, 4 mL",
+    "GelMA:0.5g",
+    "LAP:0.5 wt%",
+    "RSF",
+    "CHI"
+  ],
+  "Instruments": [
+    "UV irradiation device",
+    "incubator"
+  ],
+  "Containers": [
+    "test tube",
+    "Petri dish"
+  ],
+  "Operations": [
+    {
+      "Type": "dissolution",
+      "Object": ["DMA: 0.05 g", "Tris-HCl:pH = 8, 4 mL"],
+      "Container": "test tube",
+      "Description": "DMA 0.05g was dissolved in 4 mL Tris-HCl.",
+      "Instrument parameters": {"incubator": ["37°C", "2 h"]},
+      "Product": "ODMA"
+    },
+    {
+      "Type": "mixing",
+      "Object": ["ODMA", "GelMA:0.5g", "LAP:0.5 wt%"],
+      "Container": "test tube",
+      "Description": "ODMA was mixed with 0.5g GelMA and 0.5 wt% LAP.",
+      "Instrument parameters": {},
+      "Product": "ODMA-GelMA precursor solution"
+    },
+    {
+      "Type": "casting",
+      "Object": ["ODMA-GelMA precursor solution"],
+      "Container": "Petri dish",
+      "Description": "The ODMA-GelMA precursor solution was cast into a Petri dish.",
+      "Instrument parameters": {},
+      "Product": "cast ODMA-GelMA precursor"
+    },
+    {
+      "Type": "uv-irradiation",
+      "Object": ["cast ODMA-GelMA precursor"],
+      "Container": "Petri dish",
+      "Description": "The cast ODMA-GelMA precursor was exposed to UV light to form the ODMA-GelMA hydrogel.",
+      "Instrument parameters": {},
+      "Product": "ODMA-GelMA hydrogel"
+    },
+    {
+      "Type": "immersion",
+      "Object": ["RSF", "ODMA-GelMA hydrogel"],
+      "Container": "Petri dish",
+      "Description": "The ODMA-GelMA hydrogel placed in RSF solutions.",
+      "Instrument parameters": {"Petri dish": ["20 min"]},
+      "Product": "RSF/ODMA-GelMA composite membrane"
+    },
+    {
+      "Type": "immersion",
+      "Object": ["CHI", "RSF/ODMA-GelMA composite membrane"],
+      "Container": "Petri dish",
+      "Description": "The ODMA-GelMA hydrogel placed in  CHI solutions.",
+      "Instrument parameters": {"Petri dish": ["20 min"]},
+      "Product": "RSF/CHI-ODMA-GelMA composite membrane"
+    },
+    {
+      "Type": "washing",
+      "Object": ["RSF/CHI-ODMA-GelMA composite membrane"],
+      "Container": "Petri dish",
+      "Description": "The RSF/CHI-ODMA-GelMA composite membrane was washed.",
+      "Instrument parameters": {},
+      "Product": "washed RSF/CHI-ODMA-GelMA composite membrane"
+    },
+    {
+      "Type": "drying",
+      "Object": ["washed RSF/CHI-ODMA-GelMA composite membrane"],
+      "Container": "Petri dish",
+      "Description": "The washed RSF/CHI-ODMA-GelMA composite membrane was dried.",
+      "Instrument parameters": {},
+      "Product": "dried RSF/CHI-ODMA-GelMA composite membrane"
+    }
+  ]
+}

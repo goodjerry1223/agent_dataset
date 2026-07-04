@@ -1,0 +1,46 @@
+You will convert extracted preparation evidence into a protocol JSON.
+
+Target markdown file: {{MARKDOWN_FILE_NAME}}
+
+Important rules:
+1. Follow the output structure and field naming style of the shot JSON exactly.
+2. The shot JSON is a formatting reference only. Never copy material names, parameters, or steps from the shot unless they are also supported by the extracted evidence.
+3. Use only the extracted evidence below. Do not use external knowledge or guess missing values.
+4. Keep the operations in chronological order and preserve continuity between intermediate products.
+5. Include only preparation-related instruments and containers. Exclude characterization and biological assay equipment unless directly used in the preparation itself.
+6. Keep all JSON values in concise English to match the shot style.
+7. If a parameter is not explicitly reported, do not invent it. Leave it out from the relevant list or object.
+8. Return valid JSON only, with the exact top-level keys:
+   - "Protocol"
+   - "Materials"
+   - "Instruments"
+   - "Containers"
+   - "Operations"
+
+Field guidance:
+- "Protocol": generate a concise English name from the extracted evidence, preferably based on the main material system or composite structure, and end it with `_protocol`.
+- "Materials": list only explicitly mentioned preparation materials/reagents/intermediates.
+- "Instruments": list only instruments directly used for preparation.
+- "Containers": list only containers directly used for preparation.
+- "Operations": each step should contain:
+  - "Type"
+  - "Object"
+  - "Container"
+  - "Description"
+  - "Instrument parameters"
+  - "Product"
+
+For "Instrument parameters":
+- Use a JSON object mapping an instrument or container name to a list of explicit conditions.
+- Example style: {"tube": ["37°C", "2 h"]}
+- Do not include unsupported conditions.
+
+Shot JSON:
+```json
+{{SHOT_PROTOCOL_JSON}}
+```
+
+Extracted evidence JSON:
+```json
+{{EXTRACTED_SEGMENTS_JSON}}
+```

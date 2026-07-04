@@ -1,0 +1,190 @@
+{
+  "Protocol": "photocured_GelMA_oral_mucosal_tissue_protocol",
+  "Materials": [
+    "Gelatin: 10 w/v%; 5 g",
+    "DPBS: 490 mL",
+    "Methacrylic anhydride (MA): amount not reported",
+    "Distilled water",
+    "70% ethanol",
+    "Irgacure 2959: 0.05 w/v%",
+    "HGFs: 5 x 10^5 cells/well",
+    "HOK cells: 1 x 10^6 cells/hydrogel",
+    "Oral keratinocyte-serum-free medium",
+    "Penicillin: 100 mg/mL",
+    "Streptomycin: 100 mg/mL",
+    "Bovine pituitary extract",
+    "Epidermal growth factor: 10 ng/mL"
+  ],
+  "Instruments": [
+    "lyophilizer",
+    "UV irradiation device",
+    "incubator"
+  ],
+  "Containers": [
+    "dialysis tube (25 kDa cutoff)",
+    "Millicell plate (12 mm diameter)",
+    "6-well plate"
+  ],
+  "Operations": [
+    {
+      "Type": "dissolution",
+      "Object": [
+        "Gelatin: 10 w/v%; 5 g",
+        "DPBS: 490 mL"
+      ],
+      "Container": "",
+      "Description": "Gelatin was continuously stirred in DPBS at 60 C until complete dissolution.",
+      "Instrument parameters": {},
+      "Product": "gelatin solution"
+    },
+    {
+      "Type": "synthesis",
+      "Object": [
+        "gelatin solution",
+        "Methacrylic anhydride (MA): amount not reported"
+      ],
+      "Container": "",
+      "Description": "MA was added to the gelatin solution, and the mixture was stirred at 50 C for an additional 1 h to form methacrylated gelatin reactant.",
+      "Instrument parameters": {},
+      "Product": "methacrylated gelatin reactant"
+    },
+    {
+      "Type": "dialysis",
+      "Object": [
+        "methacrylated gelatin reactant",
+        "Distilled water"
+      ],
+      "Container": "dialysis tube (25 kDa cutoff)",
+      "Description": "The final reactant was dialyzed using distilled water to remove unreacted MA.",
+      "Instrument parameters": {
+        "dialysis tube (25 kDa cutoff)": [
+          "7 days"
+        ]
+      },
+      "Product": "dialyzed GelMA solution"
+    },
+    {
+      "Type": "lyophilization",
+      "Object": [
+        "dialyzed GelMA solution"
+      ],
+      "Container": "",
+      "Description": "The dialyzed GelMA solution was lyophilized. The markdown reports the lyophilization condition as 90 C for 7 days.",
+      "Instrument parameters": {
+        "lyophilizer": [
+          "90 C",
+          "7 days"
+        ]
+      },
+      "Product": "GelMA powder"
+    },
+    {
+      "Type": "sterilization",
+      "Object": [
+        "GelMA powder",
+        "70% ethanol"
+      ],
+      "Container": "",
+      "Description": "Prior to in vitro cell culture, methacrylated gelatin was sterilized using 70% ethanol for 24 h.",
+      "Instrument parameters": {},
+      "Product": "sterilized GelMA powder"
+    },
+    {
+      "Type": "dissolution",
+      "Object": [
+        "sterilized GelMA powder",
+        "Irgacure 2959: 0.05 w/v%"
+      ],
+      "Container": "",
+      "Description": "For oral mucosal tissue preparation, sterilized GelMA was used to prepare a 5 w/v% GelMA solution containing 0.05 w/v% Irgacure 2959.",
+      "Instrument parameters": {},
+      "Product": "5 w/v% GelMA solution with 0.05 w/v% Irgacure 2959"
+    },
+    {
+      "Type": "mixing",
+      "Object": [
+        "5 w/v% GelMA solution with 0.05 w/v% Irgacure 2959",
+        "HGFs: 5 x 10^5 cells/well"
+      ],
+      "Container": "",
+      "Description": "HGFs were added to the 5 w/v% GelMA solution containing 0.05 w/v% Irgacure 2959 to prepare an HGF-laden precursor.",
+      "Instrument parameters": {},
+      "Product": "HGF-laden GelMA precursor"
+    },
+    {
+      "Type": "transfer",
+      "Object": [
+        "HGF-laden GelMA precursor"
+      ],
+      "Container": "Millicell plate (12 mm diameter)",
+      "Description": "A specific volume of the HGF-laden GelMA precursor was isolated and transferred into a 12 mm Millicell plate.",
+      "Instrument parameters": {},
+      "Product": "HGF-laden precursor in Millicell plate"
+    },
+    {
+      "Type": "uv-irradiation",
+      "Object": [
+        "HGF-laden precursor in Millicell plate"
+      ],
+      "Container": "Millicell plate (12 mm diameter)",
+      "Description": "The HGF-laden precursor was photocured to form an HGF-laden photocured GelMA hydrogel.",
+      "Instrument parameters": {
+        "UV irradiation device": [
+          "365 nm",
+          "1-20 mW/cm^2"
+        ]
+      },
+      "Product": "HGF-laden photocured GelMA hydrogel"
+    },
+    {
+      "Type": "mixing",
+      "Object": [
+        "HOK cells: 1 x 10^6 cells/hydrogel",
+        "Oral keratinocyte-serum-free medium",
+        "Penicillin: 100 mg/mL",
+        "Streptomycin: 100 mg/mL",
+        "Bovine pituitary extract",
+        "Epidermal growth factor: 10 ng/mL"
+      ],
+      "Container": "",
+      "Description": "HOK cells were mixed with oral keratinocyte-serum-free medium containing penicillin, streptomycin, bovine pituitary extract, and epidermal growth factor.",
+      "Instrument parameters": {},
+      "Product": "HOK seeding suspension"
+    },
+    {
+      "Type": "transfer",
+      "Object": [
+        "HOK seeding suspension",
+        "HGF-laden photocured GelMA hydrogel"
+      ],
+      "Container": "Millicell plate (12 mm diameter)",
+      "Description": "The HOK suspension was seeded onto the surface of each photocured HGF-laden GelMA hydrogel in the Millicell plate.",
+      "Instrument parameters": {},
+      "Product": "HOK-seeded HGF-laden GelMA hydrogel"
+    },
+    {
+      "Type": "transfer",
+      "Object": [
+        "HOK-seeded HGF-laden GelMA hydrogel"
+      ],
+      "Container": "6-well plate",
+      "Description": "The cell-laden hydrogel was transferred to a 6-well plate for air-liquid interface co-culture setup.",
+      "Instrument parameters": {},
+      "Product": "air-liquid interface co-culture setup"
+    },
+    {
+      "Type": "incubation",
+      "Object": [
+        "air-liquid interface co-culture setup"
+      ],
+      "Container": "6-well plate",
+      "Description": "The co-cultured GelMA construct was incubated in the air-liquid interface system to establish the artificial oral mucosal tissue model.",
+      "Instrument parameters": {
+        "incubator": [
+          "21 days"
+        ]
+      },
+      "Product": "artificial oral mucosal tissue model"
+    }
+  ]
+}

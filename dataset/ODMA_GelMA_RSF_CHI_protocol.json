@@ -1,0 +1,69 @@
+{
+  "Protocol": "ODMA_GelMA_RSF_CHI_protocol",
+  "Materials": [
+    "DMA: 0.05 g",
+    "Tris-HCl:pH = 8, 4 mL",
+    "GelMA:0.5g",
+    "LAP:0.5 wt%",
+    "RSF ",
+    "CHI "
+  ],
+  "Instruments": [
+    "UV irradiation device",
+    "incubator"
+  ],
+  "Containers": [
+    "test tube",
+    "Petri dish"
+  ],
+  "Operations": [
+    {
+      "Type": "Synthesis",
+      "Object": ["DMA: 0.05 g", "Tris-HCl:pH = 8, 4 mL"],
+      "Container": "test tube",
+      "Description": "DMA 0.05g was dissolved in 4 mL Tris-HCl.",
+      "Instrument parameters": {"tube": ["37°C", "2 h"]},
+      "Product":"ODMA"
+    },
+    {
+      "Type":"Synthesis",
+      "Object":["ODMA", "GelMA:0.5g", "LAP:0.5 wt%"],
+      "Container": "test tube",
+      "Description":"ODMA was mixed with 0.5g GelMA and 0.5 wt% LAP",
+      "Instrument parameters": {},
+      "Product":"ODMA-GelMA solution"
+    },
+    {
+      "Type":"UV irradiation",
+      "Object":["ODMA-GelMA solution"],
+      "Container": "Petri dish",
+      "Description":"The ODMA-GelMA solution was exposed to UV light to form the ODMA-GelMA hydrogel.",
+      "Instrument parameters": {},
+      "Product":"ODMA-GelMA hydrogel"
+    },
+    {
+      "Type": "Synthesis",
+      "Object": ["RSF", "ODMA-GelMA hydrogel"],
+      "Container": "Petri dish",
+      "Description": "The ODMA-GelMA hydrogel placed in RSF solutions.",
+      "Instrument parameters": {"petri dish":["20 min"]},
+      "Product":"RSF/ODMA-GelMA composite membrane"
+    },
+    {
+      "Type": "Synthesis",
+      "Object": ["CHI", "RSF/ODMA-GelMA composite membrane"],
+      "Container": "Petri dish",
+      "Description": "The ODMA-GelMA hydrogel placed in  CHI solutions.",
+      "Instrument parameters": {"petri dish":["20 min"]},
+      "Product":"RSF/CHI-ODMA-GelMA composite membrane"
+    },
+    {
+      "Type":"wash and dry",
+      "Object":["RSF/CHI-ODMA-GelMA composite membrane"],
+      "Container": "Petri dish",
+      "Description":"wash and dry",
+      "Instrument parameters": {},
+      "Product":"RSF/CHI-ODMA-GelMA composite membrane"
+    }
+  ]
+}

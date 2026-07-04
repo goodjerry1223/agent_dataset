@@ -1,0 +1,30 @@
+You will read a scientific paper converted to markdown and extract only the passages that are directly useful for reconstructing a material preparation protocol.
+
+Target markdown file: {{MARKDOWN_FILE_NAME}}
+
+Requirements:
+1. Focus on preparation evidence only: materials, reagents, amounts, concentrations, pH, temperature, time, mixing, dissolving, UV/light curing, immersing/soaking, washing, drying, containers, and equipment directly used in preparation.
+2. Copy the selected text verbatim from the markdown. Do not paraphrase, summarize, translate, normalize, or merge sentences.
+3. If a paragraph depends on a neighboring sentence for continuity, include the full neighboring paragraph too.
+4. Prefer sections such as Materials and methods, Sample preparation, Experimental, Supporting information, and figure captions only when they explicitly mention preparation.
+5. Exclude passages that are only about characterization, cell assays, toxicity tests, results, discussion, references, or general background, unless they still contain direct preparation details.
+6. Do not infer missing information. If the paper does not report a value, do not invent it.
+7. Return JSON only.
+
+Output JSON schema:
+{
+  "paper_file": "string",
+  "selected_segments": [
+    {
+      "segment_id": "S1",
+      "section_hint": "short section name if visible, else empty string",
+      "why_selected": "short reason in English",
+      "verbatim_text": "original paragraph copied from markdown"
+    }
+  ]
+}
+
+Markdown content:
+```markdown
+{{MARKDOWN_TEXT}}
+```

@@ -1,0 +1,9 @@
+paper/
+markdown/
+dataset/output/
+workflow/deepseek_protocol_config.json
+workflow/*_protocol_stage1_*.json
+workflow/*_protocol_stage1_*.txt
+workflow/*_protocol_stage2_*.txt
+__pycache__/
+*.pyc
