@@ -1,0 +1,8 @@
+[project]
+name = "agent-dataset"
+version = "0.1.0"
+description = "Extract material preparation protocols from paper markdown."
+requires-python = ">=3.11"
+dependencies = [
+  "opendataloader-pdf==2.4.7",
+]

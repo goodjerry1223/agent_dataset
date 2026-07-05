@@ -2,6 +2,9 @@
 
 The target output is a protocol JSON in the same general style as the workspace shot example:
 
+- `Status`
+- `Reason`
+- `Source`
 - `Protocol`
 - `Materials`
 - `Instruments`
@@ -9,6 +12,24 @@ The target output is a protocol JSON in the same general style as the workspace 
 - `Operations`
 
 These top-level keys are mandatory for the final protocol artifact.
+
+`Status` must be one of:
+
+- `complete_protocol_found`
+- `partial_protocol_found`
+- `no_protocol_found`
+
+`Reason` must briefly explain why the paper can or cannot support a complete preparation workflow.
+
+`Source` must identify the source files used:
+
+```json
+{
+  "pdf_file": "string or empty string",
+  "markdown_file": "string",
+  "conversion_status": "converted | skipped | failed"
+}
+```
 
 ## Extraction Strategy
 
@@ -25,12 +46,13 @@ Recommended internal order:
 
 Recommended artifact sequence for one skill run:
 
-1. `00_scope.json`
-2. `01_evidence_segments.json`
-3. `02_protocol_skeleton.json`
-4. `03_protocol_details.json`
-5. `04_validation_report.json`
-6. `05_final_protocol.json`
+1. `00_conversion.json`
+2. `01_scope.json`
+3. `02_evidence_segments.json`
+4. `03_protocol_skeleton.json`
+5. `04_protocol_details.json`
+6. `05_validation_report.json`
+7. `06_final_protocol.json`
 
 ## Minimal Operation Schema
 
@@ -44,6 +66,28 @@ Each operation should eventually contain:
 - `Product`
 
 No operation should use free-form field names outside this schema in the final protocol JSON.
+
+## Diagnostic Output Policy
+
+If the source does not contain a complete preparation workflow, still produce a protocol JSON with the mandatory top-level keys.
+
+For `partial_protocol_found`:
+
+- Fill `Materials`, `Instruments`, `Containers`, and `Operations` only with explicitly supported preparation details.
+- Use `Reason` to explain which required details are missing.
+- Add a top-level `Missing information` list.
+- Do not complete the workflow from general chemistry knowledge or from the shot example.
+
+For `no_protocol_found`:
+
+- Set `Materials`, `Instruments`, `Containers`, and `Operations` to empty lists.
+- Set `Protocol` to a concise diagnostic name ending with `_protocol`, such as `<paper_stem>_no_preparation_protocol`.
+- Use `Reason` to explain why no preparation workflow can be extracted.
+- Add a top-level `Missing information` list with the unavailable categories.
+
+Allowed diagnostic top-level key:
+
+- `Missing information`
 
 ## Controlled Detail Policy
 
@@ -76,11 +120,15 @@ Before finalizing, confirm:
 Before accepting the final protocol:
 
 1. top-level keys must be exactly:
+   - `Status`
+   - `Reason`
+   - `Source`
    - `Protocol`
    - `Materials`
    - `Instruments`
    - `Containers`
    - `Operations`
+   - optional `Missing information` only when `Status` is `partial_protocol_found` or `no_protocol_found`
 2. every operation must contain exactly:
    - `Type`
    - `Object`
@@ -94,14 +142,15 @@ Before accepting the final protocol:
 6. every later-consumed intermediate must have an earlier origin inside `Operations`
 7. every explicit condition in `Instrument parameters` must be anchored in evidence
 8. characterization-only equipment must not appear in `Instruments`
+9. if `Status` is not `complete_protocol_found`, `Reason` and `Missing information` must explain why a complete workflow is unavailable
 
-The validation result should be written to `04_validation_report.json` before finalizing `05_final_protocol.json`.
+The validation result should be written to `05_validation_report.json` before finalizing `06_final_protocol.json`.
 
 ## Shot Usage Policy
 
 Current canonical shot file:
 
-- `e:\学习\agent for robotics\GELMA\.agents\skills\protocol-orchestrator\references\ODMA_GelMA_RSF_CHI_protocol.json`
+- `references/ODMA_GelMA_RSF_CHI_protocol.json`
 
 The shot example is for:
 
