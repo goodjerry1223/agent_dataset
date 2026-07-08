@@ -1,0 +1,305 @@
+{
+  "Protocol": "Yuan2024_GelMA_PRP_Microsphere_Protocol",
+  "Stages": [
+    {
+      "order": 1,
+      "stage_name": "PRP Preparation",
+      "summary": "Isolate, activate, clarify, filter, and freeze PRP from anticoagulated human venous blood.",
+      "depends_on": []
+    },
+    {
+      "order": 2,
+      "stage_name": "GelMA Synthesis",
+      "summary": "Synthesize GelMA from type A gelatin via methacrylation, purify by dialysis, and lyophilize.",
+      "depends_on": []
+    },
+    {
+      "order": 3,
+      "stage_name": "GelMA Precursor Preparation",
+      "summary": "Dissolve lyophilized GelMA in PBS with photoinitiator and sterile-filter to obtain the precursor solution.",
+      "depends_on": ["GelMA Synthesis"]
+    },
+    {
+      "order": 4,
+      "stage_name": "PRP-Loaded Microsphere Fabrication",
+      "summary": "Generate GelMA-PRP microdroplets by microfluidics and UV-cure them into hydrogel microspheres, then wash and collect.",
+      "depends_on": ["PRP Preparation", "GelMA Precursor Preparation"]
+    },
+    {
+      "order": 5,
+      "stage_name": "Composite Assembly",
+      "summary": "Combine GelMA microspheres with PRP-containing hydrogel to form the final PRP@GelMA-M composite.",
+      "depends_on": ["PRP-Loaded Microsphere Fabrication"]
+    }
+  ],
+  "Materials": [
+    "Type A gelatin: 2 g",
+    "Phosphate buffered saline (PBS): ~110 mL total (20 mL + 80 mL + 10 mL)",
+    "Methacrylic anhydride (MA): 1.6 mL",
+    "Photoinitiator: 0.5% w/v in PBS",
+    "Human venous blood: 9 mL",
+    "Sodium citrate anticoagulant: 1 mL",
+    "CaCl2 solution: 10%",
+    "Thrombin (Sigma Aldrich Cat: T6884)",
+    "Paraffin oil",
+    "Span 80: 5% v/v (surfactant)",
+    "Double-distilled water"
+  ],
+  "Instruments": [
+    "Centrifuge",
+    "Syringe pump",
+    "Microfluidic device (capillary glass tube, outlet 0.1 mm, channel 0.5 mm; Beijing Ucalery Technology)",
+    "UV irradiation device",
+    "Dialysis tubing (MWCO 12–14 kDa)",
+    "Lyophilizer",
+    "0.22 μm filter",
+    "−80 °C freezer",
+    "Incubator / heated stirrer"
+  ],
+  "Containers": [
+    "15 mL centrifuge tube",
+    "Dialysis tube",
+    "Syringe",
+    "Microfluidic device"
+  ],
+  "Operations": [
+    {
+      "Type": "centrifugation",
+      "Object": ["human venous blood: 9 mL", "sodium citrate anticoagulant: 1 mL"],
+      "Container": "15 mL centrifuge tube",
+      "Description": "Combine 9 mL venous blood with 1 mL sodium citrate anticoagulant in a 15 mL centrifuge tube and centrifuge to separate blood into stratified layers.",
+      "Instrument parameters": {
+        "centrifuge": ["300 × g", "20 min", "room temperature"]
+      },
+      "Product": "stratified blood fractions",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "transfer",
+      "Object": ["stratified blood — yellowish upper layer and junction layer"],
+      "Container": "not reported",
+      "Description": "Meticulously remove the yellowish portions of the upper layer and the junction between the upper and lower layers after centrifugation.",
+      "Instrument parameters": {},
+      "Product": "plasma/platelet fraction",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "centrifugation",
+      "Object": ["collected plasma/platelet fraction"],
+      "Container": "not reported",
+      "Description": "Centrifuge the collected fraction again to pellet platelets.",
+      "Instrument parameters": {
+        "centrifuge": ["300 × g", "20 min", "room temperature"]
+      },
+      "Product": "crude PRP (liquid at bottom)",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "mixing",
+      "Object": ["crude PRP", "serum (for dilution) or further centrifugation (for concentration)", "10% CaCl2", "thrombin (Sigma Aldrich Cat: T6884)"],
+      "Container": "not reported",
+      "Description": "Adjust platelet concentration to 1 × 10^9 mL−1 by adding serum or further centrifugation. Then mix with 10% CaCl2 and thrombin in a 9:1 volume ratio (PRP mixture : activator).",
+      "Instrument parameters": {},
+      "Product": "activated PRP mixture",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "incubation",
+      "Object": ["activated PRP mixture"],
+      "Container": "not reported",
+      "Description": "Incubate the activated PRP mixture at 37 °C for 4 h to allow platelet activation and growth factor release.",
+      "Instrument parameters": {
+        "incubator": ["37 °C", "4 h"]
+      },
+      "Product": "activated PRP",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "centrifugation",
+      "Object": ["activated PRP"],
+      "Container": "not reported",
+      "Description": "Centrifuge the activated PRP to pellet debris and clarify the supernatant containing released growth factors.",
+      "Instrument parameters": {
+        "centrifuge": ["2000 × g", "10 min", "room temperature"]
+      },
+      "Product": "clarified activated PRP supernatant",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "filtration",
+      "Object": ["clarified activated PRP supernatant"],
+      "Container": "not reported",
+      "Description": "Filter the clarified supernatant through a 0.22 μm filter to remove remaining particulates and sterilize.",
+      "Instrument parameters": {
+        "filter": ["0.22 μm pore size"]
+      },
+      "Product": "sterile activated PRP filtrate",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "cooling",
+      "Object": ["sterile activated PRP filtrate"],
+      "Container": "not reported",
+      "Description": "Freeze the sterile PRP filtrate at −80 °C for storage until subsequent use.",
+      "Instrument parameters": {
+        "freezer": ["-80 °C"]
+      },
+      "Product": "frozen activated PRP",
+      "belongto": "PRP Preparation"
+    },
+    {
+      "Type": "dissolution",
+      "Object": ["type A gelatin: 2 g", "PBS: 20 mL"],
+      "Container": "not reported",
+      "Description": "Dissolve 2 g of type A gelatin in 20 mL of PBS at 60 °C.",
+      "Instrument parameters": {
+        "heater/stirrer": ["60 °C"]
+      },
+      "Product": "gelatin solution in PBS",
+      "belongto": "GelMA Synthesis"
+    },
+    {
+      "Type": "synthesis",
+      "Object": ["gelatin solution", "methacrylic anhydride (MA): 1.6 mL"],
+      "Container": "not reported",
+      "Description": "Add 1.6 mL of methacrylic anhydride dropwise to the gelatin solution at a flow rate of 1.0 mL h−1 for 3 h under vigorous stirring to methacryloyl the gelatin.",
+      "Instrument parameters": {
+        "dropping rate": ["1.0 mL h−1"],
+        "stirring time": ["3 h"],
+        "stirring": ["vigorous"]
+      },
+      "Product": "crude methacrylated gelatin (GelMA)",
+      "belongto": "GelMA Synthesis"
+    },
+    {
+      "Type": "dialysis",
+      "Object": ["crude GelMA solution", "PBS: 80 mL prewarmed"],
+      "Container": "dialysis tube (MWCO 12–14 kDa)",
+      "Description": "Add 80 mL of prewarmed PBS to the reaction mixture, then dialyze using a dialysis tube with 12–14 kDa molecular weight cutoff for one week to remove unreacted components.",
+      "Instrument parameters": {
+        "dialysis tubing": ["12–14 kDa MWCO"],
+        "dialysis duration": ["one week"]
+      },
+      "Product": "purified GelMA solution",
+      "belongto": "GelMA Synthesis"
+    },
+    {
+      "Type": "filtration",
+      "Object": ["purified GelMA solution"],
+      "Container": "not reported",
+      "Description": "Filter the purified GelMA solution through a 0.22 μm filter.",
+      "Instrument parameters": {
+        "filter": ["0.22 μm pore size"]
+      },
+      "Product": "filtered GelMA solution",
+      "belongto": "GelMA Synthesis"
+    },
+    {
+      "Type": "lyophilization",
+      "Object": ["filtered GelMA solution"],
+      "Container": "not reported",
+      "Description": "Freeze the filtered GelMA solution at −80 °C overnight, then lyophilize (freeze-dry) to obtain dry GelMA.",
+      "Instrument parameters": {
+        "freezer": ["-80 °C", "overnight"],
+        "lyophilizer": ["not specified"]
+      },
+      "Product": "lyophilized GelMA",
+      "belongto": "GelMA Synthesis"
+    },
+    {
+      "Type": "dissolution",
+      "Object": ["lyophilized GelMA: 0.7 g", "PBS: 10 mL", "photoinitiator: 0.5% w/v"],
+      "Container": "not reported",
+      "Description": "Dissolve 0.7 g of lyophilized GelMA in 10 mL of PBS containing photoinitiator at 0.5% w/v concentration while maintaining the temperature at 60 °C.",
+      "Instrument parameters": {
+        "temperature": ["60 °C"],
+        "photoinitiator concentration": ["0.5% w/v"]
+      },
+      "Product": "GelMA precursor solution",
+      "belongto": "GelMA Precursor Preparation"
+    },
+    {
+      "Type": "filtration",
+      "Object": ["GelMA precursor solution"],
+      "Container": "not reported",
+      "Description": "Filter the GelMA precursor solution through a 0.22 μm filter to remove bacteria and obtain a sterile solution.",
+      "Instrument parameters": {
+        "filter": ["0.22 μm pore size"]
+      },
+      "Product": "sterile GelMA precursor solution",
+      "belongto": "GelMA Precursor Preparation"
+    },
+    {
+      "Type": "emulsification",
+      "Object": ["sterile GelMA precursor solution with PRP (dispersed phase)", "paraffin oil (continuous phase)", "Span 80: 5% (surfactant)"],
+      "Container": "microfluidic device (capillary glass tube outlet 0.1 mm, channel 0.5 mm; Beijing Ucalery Technology)",
+      "Description": "Load GelMA-PRP mixture as the internal aqueous phase and paraffin oil with 5% Span 80 as the continuous phase into separate syringes. Inject into the microfluidic device at flow rates of 1.2 mL h−1 (dispersed phase) and 12 mL h−1 (continuous phase) using a syringe pump. Maintain production temperature at 20 °C. Shear force at the capillary outlet generates GelMA-PRP microdroplets.",
+      "Instrument parameters": {
+        "syringe pump flow rate (dispersed phase)": ["1.2 mL h−1"],
+        "syringe pump flow rate (continuous phase)": ["12 mL h−1"],
+        "microfluidic device": ["capillary outlet 0.1 mm", "channel 0.5 mm"],
+        "production temperature": ["20 °C"]
+      },
+      "Product": "GelMA-PRP microdroplets in oil",
+      "belongto": "PRP-Loaded Microsphere Fabrication"
+    },
+    {
+      "Type": "uv-irradiation",
+      "Object": ["GelMA-PRP microdroplets in continuous oil phase"],
+      "Container": "microfluidic device / collection vessel",
+      "Description": "Collect the microdroplets and cure them under UV irradiation to crosslink the GelMA and form hydrogel microspheres.",
+      "Instrument parameters": {
+        "UV irradiation": ["not specified — wavelength and intensity not reported"]
+      },
+      "Product": "cured GelMA-PRP microspheres in oil",
+      "belongto": "PRP-Loaded Microsphere Fabrication"
+    },
+    {
+      "Type": "washing",
+      "Object": ["cured GelMA-PRP microspheres in oil"],
+      "Container": "not reported",
+      "Description": "Wash the microspheres with double-distilled water to remove oil and surfactant.",
+      "Instrument parameters": {},
+      "Product": "washed GelMA microspheres (aqueous suspension)",
+      "belongto": "PRP-Loaded Microsphere Fabrication"
+    },
+    {
+      "Type": "centrifugation",
+      "Object": ["washed GelMA microsphere suspension"],
+      "Container": "not reported",
+      "Description": "Centrifuge the microsphere suspension several times to pellet the microspheres and remove residual wash liquid.",
+      "Instrument parameters": {
+        "centrifuge": ["not reported — speed and duration not specified"]
+      },
+      "Product": "pelleted GelMA microspheres",
+      "belongto": "PRP-Loaded Microsphere Fabrication"
+    },
+    {
+      "Type": "mixing",
+      "Object": ["pelleted GelMA microspheres", "hydrogel mixed with PRP"],
+      "Container": "not reported",
+      "Description": "Add the pelleted GelMA microspheres to hydrogels that have been mixed with different concentrations of PRP to obtain the final PRP@GelMA hydrogel microspheres composite (PRP@GelMA-M).",
+      "Instrument parameters": {},
+      "Product": "PRP@GelMA-M composite",
+      "belongto": "Composite Assembly"
+    }
+  ],
+  "relationship": {
+    "serial_dependencies": [
+      {"from": "GelMA Synthesis", "to": "GelMA Precursor Preparation"},
+      {"from": "GelMA Precursor Preparation", "to": "PRP-Loaded Microsphere Fabrication"},
+      {"from": "PRP Preparation", "to": "PRP-Loaded Microsphere Fabrication"},
+      {"from": "PRP-Loaded Microsphere Fabrication", "to": "Composite Assembly"}
+    ],
+    "parallel_groups": [
+      ["PRP Preparation", "GelMA Synthesis"]
+    ]
+  },
+  "Missing information": [
+    "UV irradiation wavelength and intensity for microsphere curing (not reported)",
+    "Centrifuge speed and duration for microsphere washing steps (not reported)",
+    "Exact PRP concentrations used in the composite hydrogel (described as 'different concentrations' without specification)",
+    "Container types for several intermediate steps",
+    "Whether UV curing occurs on-chip or post-collection in the microfluidic device"
+  ]
+}

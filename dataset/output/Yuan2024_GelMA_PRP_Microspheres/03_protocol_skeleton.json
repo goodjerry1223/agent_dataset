@@ -1,0 +1,173 @@
+{
+  "Protocol": "Yuan2024_GelMA_PRP_Microsphere_Protocol",
+  "Stages": [
+    {
+      "order": 1,
+      "stage_name": "PRP Preparation",
+      "summary": "Isolate, activate, clarify, filter, and freeze PRP from anticoagulated human venous blood.",
+      "depends_on": [],
+      "evidence_refs": ["E01", "E02", "E03", "E04", "E05", "E06", "E07", "E08"]
+    },
+    {
+      "order": 2,
+      "stage_name": "GelMA Synthesis",
+      "summary": "Synthesize GelMA from type A gelatin via methacrylation, purify by dialysis, and lyophilize.",
+      "depends_on": [],
+      "evidence_refs": ["E09", "E10", "E11", "E12"]
+    },
+    {
+      "order": 3,
+      "stage_name": "GelMA Precursor Preparation",
+      "summary": "Dissolve lyophilized GelMA in PBS with photoinitiator and sterile-filter to obtain the precursor solution.",
+      "depends_on": ["GelMA Synthesis"],
+      "evidence_refs": ["E13", "E14"]
+    },
+    {
+      "order": 4,
+      "stage_name": "PRP-Loaded Microsphere Fabrication",
+      "summary": "Generate GelMA-PRP microdroplets by microfluidics and UV-cure them into hydrogel microspheres, then wash and collect.",
+      "depends_on": ["PRP Preparation", "GelMA Precursor Preparation"],
+      "evidence_refs": ["E15", "E16", "E17", "E18", "E19"]
+    },
+    {
+      "order": 5,
+      "stage_name": "Composite Assembly",
+      "summary": "Combine GelMA microspheres with PRP-containing hydrogel to form the final PRP@GelMA-M composite.",
+      "depends_on": ["PRP-Loaded Microsphere Fabrication"],
+      "evidence_refs": ["E20"]
+    }
+  ],
+  "Operations": [
+    {
+      "Type": "centrifugation",
+      "Product": "stratified blood fractions",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E01", "E02"]
+    },
+    {
+      "Type": "transfer",
+      "Product": "plasma/platelet fraction",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E03"]
+    },
+    {
+      "Type": "centrifugation",
+      "Product": "crude PRP",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E04"]
+    },
+    {
+      "Type": "mixing",
+      "Product": "activated PRP mixture",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E05", "E06"]
+    },
+    {
+      "Type": "incubation",
+      "Product": "activated PRP",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E07"]
+    },
+    {
+      "Type": "centrifugation",
+      "Product": "clarified activated PRP supernatant",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E07"]
+    },
+    {
+      "Type": "filtration",
+      "Product": "sterile activated PRP filtrate",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E08"]
+    },
+    {
+      "Type": "thawing",
+      "Product": "frozen PRP (held for later use)",
+      "belongto": "PRP Preparation",
+      "evidence_refs": ["E08"]
+    },
+    {
+      "Type": "dissolution",
+      "Product": "gelatin solution in PBS",
+      "belongto": "GelMA Synthesis",
+      "evidence_refs": ["E09"]
+    },
+    {
+      "Type": "synthesis",
+      "Product": "methacrylated gelatin (crude GelMA)",
+      "belongto": "GelMA Synthesis",
+      "evidence_refs": ["E10"]
+    },
+    {
+      "Type": "dialysis",
+      "Product": "purified GelMA solution",
+      "belongto": "GelMA Synthesis",
+      "evidence_refs": ["E11"]
+    },
+    {
+      "Type": "filtration",
+      "Product": "filtered GelMA solution",
+      "belongto": "GelMA Synthesis",
+      "evidence_refs": ["E12"]
+    },
+    {
+      "Type": "lyophilization",
+      "Product": "lyophilized GelMA",
+      "belongto": "GelMA Synthesis",
+      "evidence_refs": ["E12"]
+    },
+    {
+      "Type": "dissolution",
+      "Product": "GelMA precursor solution",
+      "belongto": "GelMA Precursor Preparation",
+      "evidence_refs": ["E13"]
+    },
+    {
+      "Type": "filtration",
+      "Product": "sterile GelMA precursor solution",
+      "belongto": "GelMA Precursor Preparation",
+      "evidence_refs": ["E14"]
+    },
+    {
+      "Type": "emulsification",
+      "Product": "GelMA-PRP microdroplets in oil",
+      "belongto": "PRP-Loaded Microsphere Fabrication",
+      "evidence_refs": ["E15", "E16", "E17"]
+    },
+    {
+      "Type": "uv-irradiation",
+      "Product": "cured GelMA-PRP microspheres",
+      "belongto": "PRP-Loaded Microsphere Fabrication",
+      "evidence_refs": ["E18"]
+    },
+    {
+      "Type": "washing",
+      "Product": "washed GelMA microspheres",
+      "belongto": "PRP-Loaded Microsphere Fabrication",
+      "evidence_refs": ["E19"]
+    },
+    {
+      "Type": "centrifugation",
+      "Product": "pelleted GelMA microspheres",
+      "belongto": "PRP-Loaded Microsphere Fabrication",
+      "evidence_refs": ["E19"]
+    },
+    {
+      "Type": "mixing",
+      "Product": "PRP@GelMA-M composite",
+      "belongto": "Composite Assembly",
+      "evidence_refs": ["E20"]
+    }
+  ],
+  "relationship": {
+    "serial_dependencies": [
+      {"from": "GelMA Synthesis", "to": "GelMA Precursor Preparation"},
+      {"from": "GelMA Precursor Preparation", "to": "PRP-Loaded Microsphere Fabrication"},
+      {"from": "PRP Preparation", "to": "PRP-Loaded Microsphere Fabrication"},
+      {"from": "PRP-Loaded Microsphere Fabrication", "to": "Composite Assembly"}
+    ],
+    "parallel_groups": [
+      ["PRP Preparation", "GelMA Synthesis"]
+    ]
+  }
+}

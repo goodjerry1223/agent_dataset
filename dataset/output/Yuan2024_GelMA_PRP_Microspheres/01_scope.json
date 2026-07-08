@@ -1,0 +1,14 @@
+{
+  "paper_file": "markdown/Small - 2024 - Yuan - Injectable GelMA Hydrogel Microspheres with Sustained Release of Platelet‐Rich Plasma for the.md",
+  "protocol_relevance": "complete_protocol_found",
+  "target_material_or_construct": "PRP@GelMA hydrogel microspheres composite (PRP@GelMA-M) — an injectable biomaterial consisting of GelMA microspheres loaded with platelet-rich plasma (PRP), intended for intrauterine delivery to treat thin endometrium.",
+  "main_preparation_sections": [
+    "Section 2.2.1: Preparation of PRP",
+    "Section 2.2.2: Preparation of PRP@GelMA Hydrogel Microspheres Composites (includes GelMA synthesis, GelMA solution preparation, microfluidic microsphere fabrication, PRP loading, and composite assembly)"
+  ],
+  "evidence_distribution": "All preparation steps are concentrated in sections 2.2.1 and 2.2.2 of the Experimental Section. Section 2.2.1 describes blood collection, anticoagulation, centrifugation, activation, and freeze-storage of PRP. Section 2.2.2 describes GelMA synthesis (gelatin dissolution, methacrylation, dialysis, filtration, lyophilization), GelMA precursor solution preparation, microfluidic droplet generation with oil/surfactant, UV curing, washing/centrifugation of microspheres, and final composite assembly with PRP-containing hydrogel.",
+  "branching_or_cycles": "No explicit branching or cycles in the preparation workflow. Stages are serial: PRP preparation and GelMA synthesis are independent (parallelizable), then converge into precursor mixing, then microsphere fabrication, then composite assembly.",
+  "reason_if_incomplete_or_absent": "N/A — complete protocol found with all essential preparation stages explicitly described.",
+  "missing_required_information": [],
+  "scope_notes": "Concentrations of PRP in the final hydrogel composite are described as 'different concentrations' without exact values in the protocol section. The paper provides sufficient detail for the core preparation workflow: PRP isolation, GelMA synthesis, microfluidic microsphere fabrication, and composite assembly."
+}

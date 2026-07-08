@@ -1,0 +1,532 @@
+name: yuan2024_gelma_prp_demo_lab
+version: 1
+start_datetime: "2025-11-04T09:00:00"
+
+devices:
+  - id: flex
+    type: robot_flex
+    aliases: [pipette_box_1]
+  - id: plate_stack
+    type: plate_stack
+    aliases: [stack_1]
+  - id: stirrer_01
+    type: magnetic_stirrer
+    aliases: [_stirrer]
+  - id: scale_01
+    type: AUBO_and_scale
+    aliases: [_scale]
+  - id: ultrasonic_1
+    type: ultrasonic
+    aliases: [ultrasonic_1]
+  - id: oven_01
+    type: vacuum_oven
+    aliases: [_oven]
+
+agents:
+  - human
+  - flex
+  - scale_01
+
+objects:
+  - id: reservoir_PBS
+    type: reservoir:PBS
+    location: {device: plate_stack, slot: A1}
+    meta: {cap_state: closed}
+  - id: reservoir_DI_Water
+    type: reservoir:DI_Water
+    location: {device: plate_stack, slot: A2}
+    meta: {cap_state: closed}
+  - id: reservoir_CaCl2_10pct
+    type: reservoir:CaCl2_10pct
+    location: {device: plate_stack, slot: A3}
+    meta: {cap_state: closed}
+  - id: reservoir_Thrombin
+    type: reservoir:Thrombin
+    location: {device: plate_stack, slot: A4}
+    meta: {cap_state: closed}
+  - id: reservoir_MA
+    type: reservoir:Methacrylic_Anhydride
+    location: {device: plate_stack, slot: A5}
+    meta: {cap_state: closed}
+  - id: reservoir_Paraffin_Oil
+    type: reservoir:Paraffin_Oil
+    location: {device: plate_stack, slot: B1}
+    meta: {cap_state: closed}
+  - id: reservoir_Span80
+    type: reservoir:Span80
+    location: {device: plate_stack, slot: B2}
+    meta: {cap_state: closed}
+  - id: empty_reservoir_1
+    type: reservoir
+    location: {device: plate_stack, slot: C1}
+    meta: {cap_state: closed}
+  - id: empty_reservoir_2
+    type: reservoir
+    location: {device: plate_stack, slot: C2}
+    meta: {cap_state: closed}
+  - id: empty_reservoir_3
+    type: reservoir
+    location: {device: plate_stack, slot: C3}
+    meta: {cap_state: closed}
+  - id: centrifuge_tube_15ml_1
+    type: centrifuge_tube:15mL
+    location: {device: plate_stack, slot: D1}
+    meta: {cap_state: closed}
+  - id: syringe_1
+    type: syringe
+    location: {device: plate_stack, slot: D2}
+  - id: syringe_2
+    type: syringe
+    location: {device: plate_stack, slot: D3}
+
+reagent_sources:
+  - reagent: PBS
+    aliases: [phosphate buffered saline, phosphate buffer saline]
+    object_id: reservoir_PBS
+    container_type: reservoir:PBS
+    physical_state: liquid
+  - reagent: double-distilled water
+    aliases: [ddH2O, DI water, water]
+    object_id: reservoir_DI_Water
+    container_type: reservoir:DI_Water
+    physical_state: liquid
+  - reagent: CaCl2 solution
+    aliases: [10% CaCl2, calcium chloride]
+    object_id: reservoir_CaCl2_10pct
+    container_type: reservoir:CaCl2_10pct
+    physical_state: liquid
+  - reagent: thrombin
+    aliases: [Thrombin, Sigma Aldrich Cat: T6884]
+    object_id: reservoir_Thrombin
+    container_type: reservoir:Thrombin
+    physical_state: liquid
+  - reagent: methacrylic anhydride
+    aliases: [MA, Methacrylic anhydride]
+    object_id: reservoir_MA
+    container_type: reservoir:Methacrylic_Anhydride
+    physical_state: liquid
+  - reagent: paraffin oil
+    aliases: [Paraffin oil]
+    object_id: reservoir_Paraffin_Oil
+    container_type: reservoir:Paraffin_Oil
+    physical_state: liquid
+  - reagent: Span 80
+    aliases: [Span80, surfactant]
+    object_id: reservoir_Span80
+    container_type: reservoir:Span80
+    physical_state: liquid
+  - reagent: type A gelatin
+    aliases: [gelatin, Type A gelatin]
+    physical_state: solid
+  - reagent: lyophilized GelMA
+    aliases: [GelMA]
+    physical_state: solid
+  - reagent: photoinitiator
+    aliases: [photoinitiator]
+    physical_state: solid_or_solution
+  - reagent: human venous blood
+    aliases: [venous blood, blood]
+    physical_state: biological_liquid
+    manual_only: true
+
+operation_primitives:
+  MoveToObject:
+    description: Move a declared container or object to a target device or storage position.
+    executors: [robot_flex, robot_jaka, human]
+    default_device_alias: pipette_box_1
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared object/container id to move.
+      target_device:
+        required: true
+        type: device_alias_or_type
+        description: Destination device alias or declared device type.
+      target_position:
+        required: false
+        type: slot_or_position
+        description: Destination slot, such as $internal_slot, $current_available_slot, $any, or a physical slot.
+      device:
+        required: false
+        type: device_alias_or_type
+        description: Executor device or agent when it must be specified.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds, not a scientific protocol condition.
+  ContainerOpenCap:
+    description: Open a capped declared container.
+    executors: [robot_flex, human]
+    default_device_alias: pipette_box_1
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared capped container to open.
+      target_device:
+        required: false
+        type: device_alias_or_type
+        description: Device where opening should occur if constrained.
+      device:
+        required: false
+        type: device_alias_or_type
+        description: Executor device or agent.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  ContainerCloseCap:
+    description: Close a capped declared container.
+    executors: [robot_flex, human]
+    default_device_alias: pipette_box_1
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared capped container to close.
+      target_device:
+        required: false
+        type: device_alias_or_type
+        description: Device where closing should occur if constrained.
+      device:
+        required: false
+        type: device_alias_or_type
+        description: Executor device or agent.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HydrogelSolidAdd:
+    description: Add a solid reagent into a declared target container by reported mass.
+    executors: [AUBO_and_scale, human]
+    default_device_alias: _scale
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared receiving container.
+      reagent_name:
+        required: true
+        type: string
+        description: Solid reagent name from the protocol JSON.
+      device:
+        required: true
+        type: device_alias_or_type
+        description: Scale or weighing device alias/type.
+      amount:
+        required: false
+        type: number
+        unit: gram
+        description: Mass in grams when directly reported or safely converted from the protocol.
+      add_weight:
+        required: false
+        type: number
+        unit: gram
+        description: Alternative mass attribute accepted by legacy task XML.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HydrogelLiquidAdd:
+    description: Add one liquid reagent from a declared source container to a declared target container.
+    executors: [robot_flex, human]
+    default_device_alias: pipette_box_1
+    parameters:
+      source_object:
+        required: true
+        type: container_id
+        description: Declared source reservoir/container containing the liquid reagent.
+      target_object:
+        required: true
+        type: container_id
+        description: Declared receiving container.
+      device:
+        required: true
+        type: device_alias_or_type
+        description: Liquid handling device alias/type.
+      target_index:
+        required: false
+        type: well_or_position
+        description: Single target well or position.
+      amount:
+        required: false
+        type: number
+        unit: microliter
+        description: Single liquid volume in microliters.
+      volume_list:
+        required: false
+        type: list[number]
+        unit: microliter
+        description: Volumes for batch addition; length must match container_well_list.
+      container_well_list:
+        required: false
+        type: list[string]
+        description: Target wells for batch addition; length must match volume_list.
+      reagent_name:
+        required: false
+        type: string
+        description: Reagent label from the protocol JSON.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HydrogelLiquidAddBatch:
+    description: Add liquid to multiple wells or positions with matched volume and target lists.
+    executors: [robot_flex, human]
+    default_device_alias: pipette_box_1
+    parameters:
+      source_object:
+        required: true
+        type: container_id
+        description: Declared source reservoir/container containing the liquid reagent.
+      target_object:
+        required: true
+        type: container_id
+        description: Declared receiving plate or container.
+      device:
+        required: true
+        type: device_alias_or_type
+        description: Liquid handling device alias/type.
+      volume_list:
+        required: true
+        type: list[number]
+        unit: microliter
+        description: Volumes for each target well or position.
+      container_well_list:
+        required: true
+        type: list[string]
+        description: Target wells or positions; length must match volume_list.
+      reagent_name:
+        required: false
+        type: string
+        description: Reagent label from the protocol JSON.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HydrogelStir:
+    description: Stir a declared container with a magnetic stirrer using reported time and optional temperature or speed.
+    executors: [magnetic_stirrer]
+    default_device_alias: _stirrer
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared container to stir.
+      time:
+        required: true
+        type: seconds
+        description: Stirring duration from the protocol JSON.
+      device:
+        required: true
+        type: device_alias_or_type
+        description: Magnetic stirrer alias/type.
+      temperature:
+        required: false
+        type: number
+        unit: celsius
+        description: Stirring temperature when reported by the protocol.
+      speed:
+        required: false
+        type: number
+        unit: rpm
+        description: Stirring speed when reported by the protocol.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HydrogelUltrasonic:
+    description: Apply ultrasonic treatment to a declared target object for a reported duration.
+    executors: [ultrasonic, human]
+    default_device_alias: ultrasonic_1
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared object/container to sonicate.
+      time:
+        required: true
+        type: seconds
+        description: Sonication duration from the protocol JSON.
+      device:
+        required: false
+        type: device_alias_or_type
+        description: Ultrasonic device alias/type.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HydrogelDryInOven:
+    description: Dry a declared target object in an oven with reported temperature and duration.
+    executors: [vacuum_oven, human]
+    default_device_alias: _oven
+    parameters:
+      target_object:
+        required: true
+        type: container_id
+        description: Declared object/container to dry.
+      temperature:
+        required: true
+        type: number
+        unit: celsius
+        description: Oven temperature from the protocol JSON.
+      time:
+        required: true
+        type: seconds
+        description: Drying duration from the protocol JSON.
+      device:
+        required: false
+        type: device_alias_or_type
+        description: Oven device alias/type.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  Wait:
+    description: Passive wait or hold step with a reported duration.
+    executors: [null]
+    parameters:
+      time:
+        required: true
+        type: seconds
+        description: Passive wait duration from the protocol JSON.
+      target_object:
+        required: false
+        type: container_id
+        description: Object being held static, if relevant.
+      estimated_time:
+        required: false
+        type: seconds
+        description: Scheduling estimate in seconds.
+  HumanOperation:
+    description: Manual execution for unsupported, unavailable, ambiguous, or safety-sensitive protocol operations.
+    executors: [human]
+    parameters:
+      description:
+        required: true
+        type: string
+        description: Human-readable instruction preserving the protocol operation intent.
+      estimated_time:
+        required: true
+        type: seconds
+        description: Scheduling estimate in seconds.
+      involved_objects:
+        required: false
+        type: csv[container_id]
+        description: Comma-separated declared containers/objects occupied or handled by the human step.
+      involved_devices:
+        required: false
+        type: csv[device_alias_or_type]
+        description: Comma-separated devices occupied or needed by the human step.
+
+operation_type_mapping:
+  dissolution:
+    preferred: [HydrogelSolidAdd, HydrogelLiquidAdd, HydrogelStir]
+    fallback: HumanOperation
+    allow_option: false
+    requires_reported_container: false
+  mixing:
+    preferred: [HydrogelLiquidAdd, HydrogelStir]
+    fallback: HumanOperation
+    allow_option: true
+    requires_reported_container: false
+  transfer:
+    preferred: [MoveToObject, HydrogelLiquidAdd]
+    fallback: HumanOperation
+    allow_option: false
+    requires_reported_container: true
+  incubation:
+    preferred: [Wait]
+    fallback: HumanOperation
+    allow_option: false
+    requires_reported_duration: true
+  heating:
+    preferred: [Wait]
+    fallback: HumanOperation
+    allow_option: false
+    requires_reported_duration: true
+  cooling:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  drying:
+    preferred: [HydrogelDryInOven]
+    fallback: HumanOperation
+    allow_option: false
+    requires_reported_duration: true
+  sonication:
+    preferred: [HydrogelUltrasonic]
+    fallback: HumanOperation
+    allow_option: true
+    requires_reported_duration: true
+  synthesis:
+    preferred: [HydrogelLiquidAdd, HydrogelStir]
+    fallback: HumanOperation
+    allow_option: false
+    requires_reported_container: false
+  centrifugation:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  filtration:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  dialysis:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  lyophilization:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  emulsification:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  uv-irradiation:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+  washing:
+    preferred: []
+    fallback: HumanOperation
+    allow_option: false
+
+duration_defaults:
+  HumanOperation:
+    default: 300
+  MoveToObject:
+    default: 60
+  ContainerOpenCap:
+    default: 30
+  ContainerCloseCap:
+    default: 30
+  HydrogelLiquidAdd:
+    default: 180
+  HydrogelSolidAdd:
+    default: 180
+  HydrogelStir:
+    default: 300
+  Wait:
+    default: 300
+  protocol_types:
+    centrifugation: 1800
+    filtration: 600
+    dialysis: 604800
+    lyophilization: 43200
+    emulsification: 3600
+    uv-irradiation: 600
+    washing: 900
+    cooling: 600
+    transfer: 300
+    synthesis: 10800
+
+generation_policy:
+  unsupported_operation: HumanOperation
+  missing_required_automation_fact: HumanOperation
+  include_human_alternative_for_automated_steps: false
+  synthesize_missing_containers_for_manual_steps: true
+  declare_only_used_devices: true
+  preserve_protocol_description_in_human_steps: true
