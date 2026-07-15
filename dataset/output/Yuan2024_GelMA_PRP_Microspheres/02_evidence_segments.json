@@ -1,0 +1,122 @@
+[
+  {
+    "segment_id": "E01",
+    "section_hint": "2.2.1 Preparation of PRP — blood collection and anticoagulation",
+    "why_selected": "Specifies blood source, anticoagulant ratio, and collection container — first step of PRP preparation.",
+    "verbatim_text": "A 1 mL sodium citrate anticoagulant was combined with 9 mL of venous blood in a 15-mL centrifuge tube."
+  },
+  {
+    "segment_id": "E02",
+    "section_hint": "2.2.1 Preparation of PRP — first centrifugation",
+    "why_selected": "States the centrifugation condition for blood fraction separation.",
+    "verbatim_text": "The mixture was then centrifuged at 300 × g for 20 min at room temperature until the upper and lower layers of liquid were stratified."
+  },
+  {
+    "segment_id": "E03",
+    "section_hint": "2.2.1 Preparation of PRP — collection of plasma fraction",
+    "why_selected": "Describes the manual separation step to collect the plasma/platelet-containing fraction.",
+    "verbatim_text": "The yellowish portions of the upper layer and the junction between the upper and lower layers were meticulously removed."
+  },
+  {
+    "segment_id": "E04",
+    "section_hint": "2.2.1 Preparation of PRP — second centrifugation",
+    "why_selected": "Second spin to pellet platelets and obtain concentrated PRP.",
+    "verbatim_text": "After centrifugation at 300 × g for 20 min, the liquid at the bottom was PRP."
+  },
+  {
+    "segment_id": "E05",
+    "section_hint": "2.2.1 Preparation of PRP — platelet count adjustment",
+    "why_selected": "Specifies the target platelet concentration and adjustment method.",
+    "verbatim_text": "The platelet concentration was adjusted to 1 × 10^9 mL−1 by adding serum or further centrifugation."
+  },
+  {
+    "segment_id": "E06",
+    "section_hint": "2.2.1 Preparation of PRP — activation with CaCl2 and thrombin",
+    "why_selected": "Describes the activation step to release growth factors from platelets, including the activation agents and ratio.",
+    "verbatim_text": "The solution was mixed with 10% CaCl2 and thrombin (Sigma Aldrich, Cat: T6884) in a 9:1 volume ratio."
+  },
+  {
+    "segment_id": "E07",
+    "section_hint": "2.2.1 Preparation of PRP — incubation and clarification",
+    "why_selected": "Incubation time and temperature for activation, then centrifugation to clarify the activated PRP.",
+    "verbatim_text": "The mixture was incubated at 37 °C for 4 h, then centrifuged at 2000 × g for 10 min at room temperature."
+  },
+  {
+    "segment_id": "E08",
+    "section_hint": "2.2.1 Preparation of PRP — filtration and freezing",
+    "why_selected": "Final processing steps: sterile filtration and long-term storage at -80 °C.",
+    "verbatim_text": "It was then filtered through a 0.22 μm filter and frozen at −80 °C for subsequent experiments."
+  },
+  {
+    "segment_id": "E09",
+    "section_hint": "2.2.2 Preparation of PRP@GelMA Hydrogel Microspheres Composites — gelatin dissolution",
+    "why_selected": "First step of GelMA synthesis: dissolving gelatin in PBS at controlled temperature.",
+    "verbatim_text": "2 g of type A gelatin was dissolved in 20 mL of phosphate buffer saline (PBS) at 60 °C."
+  },
+  {
+    "segment_id": "E10",
+    "section_hint": "2.2.2 — methacrylation of gelatin",
+    "why_selected": "Key reaction step: adding methacrylic anhydride dropwise to methacryloyl gelatin.",
+    "verbatim_text": "Then, 1.6 mL of methacrylic anhydride (MA) was added dropwise to the solution at a flow rate of 1.0 mL h−1 for 3 h under vigorous stirring."
+  },
+  {
+    "segment_id": "E11",
+    "section_hint": "2.2.2 — dilution after reaction",
+    "why_selected": "Dilution with prewarmed PBS before dialysis.",
+    "verbatim_text": "Then, 80 mL of prewarmed PBS was added, and the unreacted components were eliminated by dialyzing the mixture using a dialysis tube with a molecular weight of 12–14 kDa for one week."
+  },
+  {
+    "segment_id": "E12",
+    "section_hint": "2.2.2 — filtration, freezing, and lyophilization of GelMA",
+    "why_selected": "Purification and drying of the synthesized GelMA.",
+    "verbatim_text": "Subsequently, the resulting fluid was filtered through a filter with a pore size of 0.22 μm, frozen at −80 °C overnight, and lyophilized."
+  },
+  {
+    "segment_id": "E13",
+    "section_hint": "2.2.2 — GelMA precursor solution preparation",
+    "why_selected": "Preparation of working GelMA solution with photoinitiator for microsphere fabrication.",
+    "verbatim_text": "To prepare the GelMA solution, 0.7 g of lyophilized GelMA was dissolved in 10 mL of PBS containing a photoinitiator (concentration level of 0.5% w/v) while maintaining the temperature at 60 °C."
+  },
+  {
+    "segment_id": "E14",
+    "section_hint": "2.2.2 — sterile filtration of GelMA solution",
+    "why_selected": "Sterilization step for the GelMA precursor before microfluidic use.",
+    "verbatim_text": "The resulting GelMA was filtered through a 0.22 μm filter to remove bacteria."
+  },
+  {
+    "segment_id": "E15",
+    "section_hint": "2.2.2 — microfluidic device specifications",
+    "why_selected": "Critical parameters of the microfluidic chip geometry and temperature control.",
+    "verbatim_text": "The microfluidic device was purchased from Beijing Ucalery Technology and Development CO., LTD. The outlet diameter of the capillary glass tube was 0.1 mm, and the channel diameter was 0.5 mm. The temperature during the production process was 20 °C."
+  },
+  {
+    "segment_id": "E16",
+    "section_hint": "2.2.2 — dispersed and continuous phase composition",
+    "why_selected": "Defines the two fluid phases for microfluidic droplet generation.",
+    "verbatim_text": "GelMA with PRP was the internal aqueous phase (dispersed phase), while the continuous oil phase was paraffin oil. Span 80 (5%) was used as the surfactant to stabilize the droplets."
+  },
+  {
+    "segment_id": "E17",
+    "section_hint": "2.2.2 — microfluidic flow rates",
+    "why_selected": "Key process parameters: injection method and flow rates of both phases.",
+    "verbatim_text": "The two phases were injected separately into the syringe, and the flow rate of the liquid in the different microchannels of the syringe was adjusted by the syringe pump. The phase and continuous phase were injected into the microfluidic device at slow rates of 1.2 and 12 mL h−1, respectively."
+  },
+  {
+    "segment_id": "E18",
+    "section_hint": "2.2.2 — UV curing and microsphere collection",
+    "why_selected": "Solidification of microdroplets into hydrogel microspheres by UV irradiation.",
+    "verbatim_text": "The GelMA was made into microspheres by shear force and collected after curing by UV irradiation."
+  },
+  {
+    "segment_id": "E19",
+    "section_hint": "2.2.2 — washing and centrifugation of microspheres",
+    "why_selected": "Post-processing steps to remove oil and surfactant from microspheres.",
+    "verbatim_text": "Afterward, the microspheres were washed with double-distilled water and centrifuged several times to obtain GelMA microspheres."
+  },
+  {
+    "segment_id": "E20",
+    "section_hint": "2.2.2 — composite assembly with PRP hydrogel",
+    "why_selected": "Final assembly step: combining microspheres with PRP-containing hydrogel.",
+    "verbatim_text": "The microspheres were added to hydrogels mixed with different concentrations of PRP to obtain PRP@GelMA hydrogel microspheres composite (PRP@GelMA-M)."
+  }
+]

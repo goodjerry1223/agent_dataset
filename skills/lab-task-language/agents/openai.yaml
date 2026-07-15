@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Task Language"
+  short_description: "Generate TaskDefinition XML from protocol JSON and lab environment configs."
+  default_prompt: "Use this skill to convert a protocol-orchestrator final protocol JSON and an optional lab environment JSON/YAML config into valid TaskDefinition XML for the human-robot co-scheduling project."

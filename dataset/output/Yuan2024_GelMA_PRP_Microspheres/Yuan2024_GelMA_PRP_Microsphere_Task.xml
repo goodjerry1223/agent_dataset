@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task name="Yuan2024_GelMA_PRP_Microsphere_Protocol" version="0.3">
+  <MetaData>
+    <StartDateTime value="2025-11-04T09:00:00"/>
+  </MetaData>
+  <Synthesis>
+    <Device>
+      <Device type="robot_flex"/>
+      <Device type="plate_stack"/>
+      <Device type="magnetic_stirrer"/>
+      <Device type="AUBO_and_scale"/>
+      <Device type="ultrasonic"/>
+      <Device type="vacuum_oven"/>
+    </Device>
+    <Container>
+      <!-- Reagent source containers from environment -->
+      <Container id="reservoir_PBS" type="reservoir:PBS"/>
+      <Container id="reservoir_DI_Water" type="reservoir:DI_Water"/>
+      <Container id="reservoir_CaCl2_10pct" type="reservoir:CaCl2_10pct"/>
+      <Container id="reservoir_Thrombin" type="reservoir:Thrombin"/>
+      <Container id="reservoir_MA" type="reservoir:Methacrylic_Anhydride"/>
+      <Container id="reservoir_Paraffin_Oil" type="reservoir:Paraffin_Oil"/>
+      <Container id="reservoir_Span80" type="reservoir:Span80"/>
+      <!-- Work containers (from protocol Containers[] + synthesized as needed) -->
+      <Container id="centrifuge_tube_15ml_1" type="centrifuge_tube:15mL"/>
+      <Container id="empty_reservoir_1" type="reservoir"/>
+      <Container id="empty_reservoir_2" type="reservoir"/>
+      <Container id="empty_reservoir_3" type="reservoir"/>
+      <Container id="dialysis_tube_1" type="dialysis_tube"/>
+      <Container id="syringe_1" type="syringe"/>
+      <Container id="syringe_2" type="syringe"/>
+      <Container id="reservoir_final_product" type="reservoir"/>
+    </Container>
+    <MetaOperation>
+      <MetaOperation type="MoveToObject"/>
+      <MetaOperation type="ContainerOpenCap"/>
+      <MetaOperation type="ContainerCloseCap"/>
+      <MetaOperation type="HydrogelSolidAdd"/>
+      <MetaOperation type="HydrogelLiquidAdd"/>
+      <MetaOperation type="HydrogelStir"/>
+      <MetaOperation type="Wait"/>
+      <MetaOperation type="HumanOperation"/>
+    </MetaOperation>
+    <Procedure>
+
+      <!-- ============================================================ -->
+      <!-- Stage 1: PRP Preparation  &  Stage 2: GelMA Synthesis       -->
+      <!-- Parallel per relationship.parallel_groups                    -->
+      <!-- ============================================================ -->
+      <OrderAny id="parallel_prp_and_gelma">
+
+        <!-- ================== Stage 1: PRP Preparation ================== -->
+        <Sequence id="stage_prp_preparation">
+          <!--
+            Protocol Op #1 — Type: centrifugation
+            "Combine 9 mL venous blood with 1 mL sodium citrate anticoagulant
+             in a 15 mL centrifuge tube and centrifuge to separate blood into
+             stratified layers. Centrifuge: 300 × g, 20 min, room temperature."
+          -->
+          <HumanOperation
+            description="Combine 9 mL venous blood with 1 mL sodium citrate anticoagulant in a 15 mL centrifuge tube and centrifuge at 300 × g for 20 min at room temperature to separate blood into stratified layers."
+            involved_objects="centrifuge_tube_15ml_1"
+            estimated_time="1800"
+          />
+
+          <!--
+            Protocol Op #2 — Type: transfer
+            "Meticulously remove the yellowish portions of the upper layer and
+             the junction between the upper and lower layers after centrifugation."
+          -->
+          <HumanOperation
+            description="Meticulously remove the yellowish portions of the upper layer and the junction between the upper and lower layers after centrifugation."
+            involved_objects="centrifuge_tube_15ml_1"
+            estimated_time="300"
+          />
+
+          <!--
+            Protocol Op #3 — Type: centrifugation
+            "Centrifuge the collected fraction again to pellet platelets.
+             Centrifuge: 300 × g, 20 min, room temperature."
+          -->
+          <HumanOperation
+            description="Centrifuge the collected plasma/platelet fraction again at 300 × g for 20 min at room temperature to pellet platelets."
+            involved_objects="centrifuge_tube_15ml_1"
+            estimated_time="1800"
+          />
+
+          <!--
+            Protocol Op #4 — Type: mixing
+            "Adjust platelet concentration to 1 × 10^9 mL−1 by adding serum or
+             further centrifugation. Then mix with 10% CaCl2 and thrombin in a
+             9:1 volume ratio (PRP mixture : activator)."
+          -->
+          <HumanOperation
+            description="Adjust platelet concentration to 1 × 10^9 mL−1 by adding serum or further centrifugation. Then mix with 10% CaCl2 and thrombin in a 9:1 volume ratio."
+            involved_objects="centrifuge_tube_15ml_1"
+            estimated_time="300"
+          />
+
+          <!--
+            Protocol Op #5 — Type: incubation
+            "Incubate the activated PRP mixture at 37 °C for 4 h to allow
+             platelet activation and growth factor release."
+            Duration: 4 h = 14400 s — Wait primitive is applicable.
+          -->
+          <Wait time="14400" estimated_time="14400"/>
+
+          <!--
+            Protocol Op #6 — Type: centrifugation
+            "Centrifuge the activated PRP to pellet debris and clarify the
+             supernatant. Centrifuge: 2000 × g, 10 min, room temperature."
+          -->
+          <HumanOperation
+            description="Centrifuge the activated PRP at 2000 × g for 10 min at room temperature to pellet debris and clarify the supernatant containing released growth factors."
+            involved_objects="centrifuge_tube_15ml_1"
+            estimated_time="1800"
+          />
+
+          <!--
+            Protocol Op #7 — Type: filtration
+            "Filter the clarified supernatant through a 0.22 μm filter to remove
+             remaining particulates and sterilize."
+          -->
+          <HumanOperation
+            description="Filter the clarified supernatant through a 0.22 μm filter to remove remaining particulates and sterilize."
+            estimated_time="600"
+          />
+
+          <!--
+            Protocol Op #8 — Type: cooling
+            "Freeze the sterile PRP filtrate at −80 °C for storage until
+             subsequent use."
+          -->
+          <HumanOperation
+            description="Freeze the sterile PRP filtrate at −80 °C for storage until subsequent use."
+            estimated_time="600"
+          />
+        </Sequence>
+
+        <!-- ================== Stage 2: GelMA Synthesis ================== -->
+        <Sequence
+          id="stage_gelma_synthesis"
+          device_assignment="_stirrer:magnetic_stirrer, _scale:AUBO_and_scale, pipette_box_1:robot_flex"
+        >
+          <!--
+            Protocol Op #9 — Type: dissolution
+            "Dissolve 2 g of type A gelatin in 20 mL of PBS at 60 °C."
+            Map: HydrogelSolidAdd + HydrogelLiquidAdd + HydrogelStir
+          -->
+          <MoveToObject
+            target_object="empty_reservoir_1"
+            target_device="_scale"
+            target_position="$internal_slot"
+          />
+          <ContainerOpenCap target_object="reservoir_PBS"/>
+          <ContainerOpenCap target_object="empty_reservoir_1"/>
+          <HydrogelSolidAdd
+            target_object="empty_reservoir_1"
+            reagent_name="type A gelatin"
+            amount="2"
+            device="_scale"
+          />
+          <HydrogelLiquidAdd
+            source_object="reservoir_PBS"
+            target_object="empty_reservoir_1"
+            amount="20000"
+            device="pipette_box_1"
+          />
+          <ContainerCloseCap target_object="reservoir_PBS"/>
+          <HydrogelStir
+            target_object="empty_reservoir_1"
+            time="900"
+            temperature="60"
+            device="_stirrer"
+          />
+          <!-- Keep empty_reservoir_1 open; next op adds MA to the same vessel -->
+
+          <!--
+            Protocol Op #10 — Type: synthesis
+            "Add 1.6 mL of methacrylic anhydride dropwise to the gelatin solution
+             at 1.0 mL h−1 for 3 h under vigorous stirring."
+            Map: HydrogelLiquidAdd + HydrogelStir
+          -->
+          <ContainerOpenCap target_object="reservoir_MA"/>
+          <HydrogelLiquidAdd
+            source_object="reservoir_MA"
+            target_object="empty_reservoir_1"
+            amount="1600"
+            device="pipette_box_1"
+          />
+          <HydrogelStir
+            target_object="empty_reservoir_1"
+            time="10800"
+            device="_stirrer"
+          />
+          <ContainerCloseCap target_object="reservoir_MA"/>
+          <ContainerCloseCap target_object="empty_reservoir_1"/>
+
+          <!--
+            Protocol Op #11 — Type: dialysis
+            "Add 80 mL of prewarmed PBS to the reaction mixture, then dialyze
+             using a dialysis tube with 12–14 kDa MWCO for one week."
+          -->
+          <HumanOperation
+            description="Add 80 mL of prewarmed PBS to the reaction mixture, then dialyze using a dialysis tube with 12–14 kDa molecular weight cutoff for one week to remove unreacted components."
+            involved_objects="empty_reservoir_1, dialysis_tube_1"
+            estimated_time="604800"
+          />
+
+          <!--
+            Protocol Op #12 — Type: filtration
+            "Filter the purified GelMA solution through a 0.22 μm filter."
+          -->
+          <HumanOperation
+            description="Filter the purified GelMA solution through a 0.22 μm filter."
+            estimated_time="600"
+          />
+
+          <!--
+            Protocol Op #13 — Type: lyophilization
+            "Freeze the filtered GelMA solution at −80 °C overnight, then
+             lyophilize to obtain dry GelMA."
+          -->
+          <HumanOperation
+            description="Freeze the filtered GelMA solution at −80 °C overnight, then lyophilize (freeze-dry) to obtain dry GelMA."
+            estimated_time="43200"
+          />
+        </Sequence>
+      </OrderAny>
+
+      <!-- ============================================================ -->
+      <!-- Stage 3: GelMA Precursor Preparation                         -->
+      <!-- depends_on: ["GelMA Synthesis"]                              -->
+      <!-- ============================================================ -->
+      <Sequence
+        id="stage_gelma_precursor"
+        device_assignment="_stirrer:magnetic_stirrer, _scale:AUBO_and_scale, pipette_box_1:robot_flex"
+      >
+        <!--
+          Protocol Op #14 — Type: dissolution
+          "Dissolve 0.7 g of lyophilized GelMA in 10 mL of PBS containing
+           photoinitiator (0.5% w/v) at 60 °C."
+          Map: HydrogelSolidAdd + HydrogelLiquidAdd + HydrogelStir
+        -->
+        <MoveToObject
+          target_object="empty_reservoir_2"
+          target_device="_scale"
+          target_position="$internal_slot"
+        />
+        <ContainerOpenCap target_object="reservoir_PBS"/>
+        <ContainerOpenCap target_object="empty_reservoir_2"/>
+        <HydrogelSolidAdd
+          target_object="empty_reservoir_2"
+          reagent_name="lyophilized GelMA"
+          amount="0.7"
+          device="_scale"
+        />
+        <HydrogelLiquidAdd
+          source_object="reservoir_PBS"
+          target_object="empty_reservoir_2"
+          amount="10000"
+          device="pipette_box_1"
+        />
+        <ContainerCloseCap target_object="reservoir_PBS"/>
+        <HydrogelStir
+          target_object="empty_reservoir_2"
+          time="600"
+          temperature="60"
+          device="_stirrer"
+        />
+        <ContainerCloseCap target_object="empty_reservoir_2"/>
+
+        <!--
+          Protocol Op #15 — Type: filtration
+          "Filter the GelMA precursor solution through a 0.22 μm filter to
+           remove bacteria and obtain a sterile solution."
+        -->
+        <HumanOperation
+          description="Filter the GelMA precursor solution through a 0.22 μm filter to remove bacteria and obtain a sterile solution."
+          involved_objects="empty_reservoir_2"
+          estimated_time="600"
+        />
+      </Sequence>
+
+      <!-- ============================================================ -->
+      <!-- Stage 4: PRP-Loaded Microsphere Fabrication                  -->
+      <!-- depends_on: ["PRP Preparation", "GelMA Precursor Preparation"] -->
+      <!-- ============================================================ -->
+      <Sequence id="stage_microsphere_fabrication">
+        <!--
+          Protocol Op #16 — Type: emulsification
+          "Load GelMA-PRP mixture as the internal aqueous phase and paraffin oil
+           with 5% Span 80 as the continuous phase into separate syringes.
+           Inject at 1.2 and 12 mL h−1 via syringe pump. Temperature 20 °C."
+        -->
+        <HumanOperation
+          description="Load GelMA-PRP mixture as the internal aqueous (dispersed) phase and paraffin oil with 5% Span 80 as the continuous phase into separate syringes. Inject into the microfluidic device at 1.2 mL h−1 (dispersed) and 12 mL h−1 (continuous) via syringe pump. Microfluidic device: capillary outlet 0.1 mm, channel 0.5 mm. Temperature: 20 °C. Shear force at the capillary outlet generates GelMA-PRP microdroplets."
+          involved_objects="empty_reservoir_2, syringe_1, syringe_2"
+          estimated_time="3600"
+        />
+
+        <!--
+          Protocol Op #17 — Type: uv-irradiation
+          "Collect the microdroplets and cure them under UV irradiation to
+           crosslink the GelMA and form hydrogel microspheres."
+        -->
+        <HumanOperation
+          description="Collect the microdroplets and cure them under UV irradiation to crosslink the GelMA and form hydrogel microspheres."
+          involved_objects="empty_reservoir_3"
+          estimated_time="600"
+        />
+
+        <!--
+          Protocol Op #18 — Type: washing
+          "Wash the microspheres with double-distilled water to remove oil and
+           surfactant."
+        -->
+        <HumanOperation
+          description="Wash the microspheres with double-distilled water to remove oil and surfactant."
+          involved_objects="empty_reservoir_3, reservoir_DI_Water"
+          estimated_time="900"
+        />
+
+        <!--
+          Protocol Op #19 — Type: centrifugation
+          "Centrifuge the microsphere suspension several times to pellet the
+           microspheres and remove residual wash liquid."
+        -->
+        <HumanOperation
+          description="Centrifuge the microsphere suspension several times to pellet the microspheres and remove residual wash liquid."
+          involved_objects="empty_reservoir_3"
+          estimated_time="1800"
+        />
+      </Sequence>
+
+      <!-- ============================================================ -->
+      <!-- Stage 5: Composite Assembly                                  -->
+      <!-- depends_on: ["PRP-Loaded Microsphere Fabrication"]           -->
+      <!-- ============================================================ -->
+      <Sequence id="stage_composite_assembly">
+        <!--
+          Protocol Op #20 — Type: mixing
+          "Add the pelleted GelMA microspheres to hydrogels that have been
+           mixed with different concentrations of PRP to obtain the final
+           PRP@GelMA hydrogel microspheres composite (PRP@GelMA-M)."
+        -->
+        <HumanOperation
+          description="Add the pelleted GelMA microspheres to hydrogels that have been mixed with different concentrations of PRP to obtain the final PRP@GelMA hydrogel microspheres composite (PRP@GelMA-M)."
+          involved_objects="empty_reservoir_3, reservoir_final_product"
+          estimated_time="900"
+        />
+      </Sequence>
+
+    </Procedure>
+  </Synthesis>
+</Task>

@@ -8,7 +8,7 @@ import opendataloader_pdf
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-DEFAULT_INPUT = PROJECT_ROOT / "paper" / "GELMA" / "1-s2.0-S0167577X2400404X-main.pdf"
+DEFAULT_INPUT = PROJECT_ROOT / "paper" / "GELMA" / "Small - 2024 - Yuan - Injectable GelMA Hydrogel Microspheres with Sustained Release of Platelet‐Rich Plasma for the.pdf"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "markdown"
 
 

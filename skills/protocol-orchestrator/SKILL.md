@@ -1,141 +1,80 @@
 ---
 name: protocol-orchestrator
-description: Orchestrates PDF-to-markdown conversion and multi-pass extraction of experimental preparation protocols into protocol JSON. Invoke when converting papers, building, checking, or revising material-preparation workflows from literature.
+description: Extracts experimental material-preparation workflows from paper markdown into protocol JSON. Invoke when building, checking, or revising material-preparation workflows from literature.
 ---
 
 # Protocol Orchestrator
 
-This skill converts scientific paper PDFs to markdown when needed, then extracts a preparation protocol from the markdown into a final JSON protocol.
-
-The workflow is designed for tasks where a single prompt is not reliable enough. Use staged extraction, evidence grounding, and explicit self-checking before finalizing the JSON.
+Extract one preparation workflow from one paper markdown into one final protocol
+JSON.
 
 ## Goal
 
-Produce one final protocol JSON consistent with the project output contract and grounded in the source paper.
+- stay grounded in the source markdown
+- model large preparation stages before local operations
+- capture stage dependencies, including parallel branches when supported
+- keep unsupported values out of the final JSON
+- finalize only after one explicit audit pass
 
-The workflow must also handle papers that are not about material preparation. If the source does not contain enough preparation evidence, produce a diagnostic protocol JSON that explains why a complete experimental workflow cannot be extracted instead of inventing steps.
+## Read First
 
-The final output must prioritize:
-
-1. Source consistency
-2. Chronological continuity
-3. Explicit parameter grounding
-4. Controlled operation typing
-5. Minimal hallucination
-
-## Required Working Style
-
-- Work from overall structure to local details.
-- If the input is a PDF, convert it to markdown before extraction.
-- Do not jump directly from full paper text to final JSON.
-- First identify the protocol frame, then step skeleton, then step details.
-- Treat missing information as `not reported` in reasoning; never invent values.
-- Prefer a conservative omission over an unsupported completion.
-- When a field is uncertain, re-read the source evidence before deciding.
-
-## Canonical References
-
-Before extracting, read these files in the same skill directory:
+Always read these references before extracting:
 
 - `references/output-contract.md`
 - `references/operation-types.md`
-
-The current workspace canonical shot is in skil directory：
-
 - `references/ODMA_GelMA_RSF_CHI_protocol.json`
+- `references/PRP_GelMA_Microsphere_Composite_Protocol.json`
 
-Use this shot as a granularity and structure reference only, not as content to copy.
+Use the reference JSON files only for shape, granularity, and dependency style.
+Do not copy their materials, instruments, containers, operations, or wording.
 
-## Execution Artifacts And Paths
+## Paths
 
-PDF inputs are expected under:
+- input markdown: `markdown/`
+- intermediate artifacts: `dataset/output/<markdown_stem>/`
+- final artifact: `dataset/<Protocol>.json`
 
-- `paper/GELMA/`
+Use these intermediate files:
 
-Converted markdown should be stored under:
+1. `01_scope.json`
+2. `02_evidence_segments.json`
+3. `03_protocol_skeleton.json`
+4. `04_protocol_details.json`
+5. `05_validation_report.json`
 
-- `markdown/`
+## Working Rules
 
-If a markdown file is already supplied, use it directly and do not reconvert a PDF.
+- Work in this order: scope -> evidence -> skeleton -> details -> audit -> final.
+- Use markdown as the only source of truth.
+- Never jump straight from full paper text to final JSON.
+- Prefer conservative omission over unsupported completion.
+- Treat missing information as `not reported`, not as something to infer.
+- Downstream workflow generation should rely only on `dataset/<Protocol>.json`.
 
-For each paper input, create one run directory based on the markdown stem:
+## Standard Format
 
-- `dataset/output/protocol_orchestrator/<markdown_stem>/`
+The final protocol must follow `references/output-contract.md`.
 
-Use the following fixed artifact names inside that directory:
+`references/output-contract.md` is the only canonical source for final JSON
+schema and validation rules. Do not add extra top-level keys that are not
+defined there.
 
-1. `00_conversion.json`
-2. `01_scope.json`
-3. `02_evidence_segments.json`
-4. `03_protocol_skeleton.json`
-5. `04_protocol_details.json`
-6. `05_validation_report.json`
-7. `06_final_protocol.json`
+Important structure rules:
 
-Additional optional artifacts may be stored beside them when useful:
+- `Stages[]` uses natural-language `stage_name`
+- `Stages[].depends_on` must use stage names directly, for example
+  `["PRP Preparation", "GelMA Synthesis"]`.
+- `Operations[].belongto` must use one existing `stage_name`.
+- `relationship.serial_dependencies[].from` and `.to` must use stage names.
+- `relationship.parallel_groups` must contain stage-name arrays.
+- `relationship` must be derived from `Stages[].depends_on`, not reasoned
+  separately.
 
-- `00_notes.md`
-- `01_evidence_quotes.md`
-- `stage_prompt.txt`
-- `stage_raw_response.txt`
+## Stage 1: Scope
 
-The final protocol may then be copied or saved to the project final target location only after validation passes. The canonical finalized artifact for the skill run itself is still `06_final_protocol.json`.
+Write `01_scope.json`.
 
-## Execution Workflow
-
-### Phase 0: Convert PDF To Markdown
-
-If the input is a PDF, convert it to markdown before extraction.
-
-Rules:
-
-- Read PDFs from `paper/GELMA/` unless the user supplies another path.
-- Write converted markdown to `markdown/`.
-- Use the existing project converter when possible: `convert_pdf_to_md.py`.
-- If conversion fails, stop and write the failure reason to `00_conversion.json`.
-- If the input is already markdown, record that conversion was skipped.
-
-Output file:
-
-- `dataset/output/protocol_orchestrator/<markdown_stem>/00_conversion.json`
-
-Required contents:
-
-- `input_file`
-- `input_type` with value `pdf` or `markdown`
-- `markdown_file`
-- `conversion_status` with value `converted`, `skipped`, or `failed`
-- `conversion_notes`
-
-### Phase 1: Scope The Task
-
-Determine whether the target text is actually a preparation protocol.
-
-Identify:
-
-- target material or construct
-- source type, such as research article, review, simulation paper, characterization paper, or methods paper
-- main preparation section
-- whether protocol evidence is concentrated or scattered
-- whether the paper includes repeated cycles, branching, or nested sub-protocols
-
-Classify protocol relevance with one of these exact values:
-
-- `complete_protocol_found`: enough evidence exists to reconstruct a chronological preparation workflow
-- `partial_protocol_found`: preparation is mentioned, but required details are missing or delegated to another source
-- `no_protocol_found`: no material-preparation workflow is present
-
-If the text is not primarily about preparation, state that clearly. Do not force a normal operation sequence.
-
-Inputs:
-
-- source markdown
-
-Output file:
-
-- `dataset/output/protocol_orchestrator/<markdown_stem>/01_scope.json`
-
-Required contents:
+Required keys:
 
 - `paper_file`
 - `protocol_relevance`
@@ -147,142 +86,78 @@ Required contents:
 - `missing_required_information`
 - `scope_notes`
 
-Gate:
+`protocol_relevance` must be one of:
 
-- If `protocol_relevance` is `complete_protocol_found`, continue to Phase 2.
-- If `protocol_relevance` is `partial_protocol_found`, continue to Phase 2 only for available evidence, then produce a diagnostic final JSON explaining missing information.
-- If `protocol_relevance` is `no_protocol_found`, skip skeleton/detail generation and produce a diagnostic final JSON with empty preparation lists and a clear reason.
+- `complete_protocol_found`
+- `partial_protocol_found`
+- `no_protocol_found`
 
-### Phase 2: Build An Evidence Set
+If the result is not `complete_protocol_found`, continue conservatively and
+prepare a diagnostic final JSON using only the top-level keys allowed by
+`references/output-contract.md`. Keep the diagnostic classification in
+`01_scope.json` and `05_validation_report.json`.
 
-Extract verbatim evidence segments related to preparation only.
+## Stage 2: Evidence
 
-Include evidence for:
+Write `02_evidence_segments.json`.
 
-- materials and reagents
-- quantities, concentrations, pH, temperature, time
-- containers and directly used instruments
-- action verbs
-- intermediate products
-- repeated or cyclic operations
-- washing / drying / curing / immersion / post-treatment
-
-Exclude evidence that is only about:
-
-- characterization
-- biological assays
-- performance evaluation
-- discussion
-- references
-
-unless it adds a missing preparation fact that is explicitly stated there.
-
-Inputs:
-
-- source markdown
-- `01_scope.json`
-
-Output file:
-
-- `dataset/output/protocol_orchestrator/<markdown_stem>/02_evidence_segments.json`
-
-Required contents:
-
-- `paper_file`
-- `selected_segments`
-
-Each segment must contain:
+Each selected segment must contain:
 
 - `segment_id`
 - `section_hint`
 - `why_selected`
 - `verbatim_text`
 
-### Phase 3: Build A Protocol Skeleton
+Include only preparation-relevant evidence:
 
-Construct a draft protocol frame before filling details.
+- materials, reagents, additives, solvents
+- quantities, concentrations, pH, time, temperature
+- containers and directly used instruments
+- action verbs and intermediate products
+- repeated cycles, branching, serial dependency, parallel execution clues
 
-At this stage produce:
+Exclude characterization, assay, discussion, and performance sections unless
+they explicitly provide missing preparation facts.
 
-- protocol name
-- ordered step list
-- for each step: `step_name`, `Type`, `Product`
+## Stage 3: Skeleton
 
-Do not try to fully populate parameters yet.
+Write `03_protocol_skeleton.json`.
 
-Check:
-
-- Does each step produce something needed later?
-- Is the order chronologically valid?
-- Are repeated steps represented explicitly or with a justified loop statement?
-
-Inputs:
-
-- `01_scope.json`
-- `02_evidence_segments.json`
-- `references/output-contract.md`
-- `references/operation-types.md`
-- `references/ODMA_GelMA_RSF_CHI_protocol.json`
-
-Output file:
-
-- `dataset/output/protocol_orchestrator/<markdown_stem>/03_protocol_skeleton.json`
-
-Required contents:
+Required top-level keys:
 
 - `Protocol`
+- `Stages`
 - `Operations`
+- `relationship`
+
+Each stage skeleton must contain:
+
+- `stage_name`
+- `order`
+- `summary`
+- `depends_on`
+- `evidence_refs`
 
 Each operation skeleton must contain:
 
-- `step_id`
-- `step_name`
 - `Type`
 - `Product`
+- `belongto`
 - `evidence_refs`
-
-At this stage, `Type` must already use the exact controlled strings from `references/operation-types.md`.
-
-If `protocol_relevance` is not `complete_protocol_found`, this file may contain an empty `Operations` list plus diagnostic fields allowed by `references/output-contract.md`.
-
-### Phase 4: Fill Step Details
-
-Populate each step with:
-
-- `Object`
-- `Container`
-- `Description`
-- `Instrument parameters`
-- `Product`
 
 Rules:
 
-- Every object must be supported by evidence.
-- Every parameter must be attached to the correct step.
-- Containers and instruments must be directly stated or strongly unavoidable from explicit wording.
-- If the paper states a process but not the value, keep the process and omit the unsupported value.
+- `Type` must use one exact label from `references/operation-types.md`.
+- `belongto` must reference one valid `stage_name`.
+- `evidence_refs` must use `segment_id` values from `02_evidence_segments.json`.
+- Build dependency structure at the stage level first, then place operations
+  inside stages.
 
-Inputs:
+## Stage 4: Details
 
-- `01_scope.json`
-- `02_evidence_segments.json`
-- `03_protocol_skeleton.json`
-- `references/output-contract.md`
-- `references/operation-types.md`
+Write `04_protocol_details.json`.
 
-Output file:
-
-- `dataset/output/protocol_orchestrator/<markdown_stem>/04_protocol_details.json`
-
-Required contents:
-
-- `Protocol`
-- `Materials`
-- `Instruments`
-- `Containers`
-- `Operations`
-
-Each final-draft operation must contain exactly the shot-style fields:
+Each final operation must contain exactly:
 
 - `Type`
 - `Object`
@@ -290,127 +165,80 @@ Each final-draft operation must contain exactly the shot-style fields:
 - `Description`
 - `Instrument parameters`
 - `Product`
+- `belongto`
 
-For `partial_protocol_found` or `no_protocol_found`, keep unsupported preparation lists empty or partial, and include the reason and missing information fields required by `references/output-contract.md`.
+Rules:
 
-### Phase 5: Continuity Audit
+- every object, parameter, and condition must be evidence-supported
+- containers and instruments must be explicit in the source; otherwise omit them
+- if a process is reported but a value is not, keep the process and omit the
+  value
+- keep `Stages`, `Operations[].belongto`, and `relationship` mutually
+  consistent
 
-Perform a full internal audit before finalizing.
+## Stage 5: Audit
 
-Check all of the following:
+Write `05_validation_report.json`.
 
-1. Every `Product` is either final or consumed later.
-2. No step consumes an undefined intermediate.
-3. No operation type falls outside the controlled list in `references/operation-types.md`.
-4. No parameter appears without an anchor in the evidence.
-5. No characterization-only device is included in `Instruments`.
-6. The final JSON follows the required shot-style top-level structure.
+Required top-level keys:
 
-If any check fails, revise the draft instead of returning it as-is.
-
-Inputs:
-
-- `01_scope.json`
-- `02_evidence_segments.json`
-- `04_protocol_details.json`
-- `references/output-contract.md`
-- `references/operation-types.md`
-
-Output file:
-
-- `dataset/output/protocol_orchestrator/<markdown_stem>/05_validation_report.json`
-
-The validation report must contain:
-
-- `status` with value `pass` or `fail`
+- `status`
 - `checked_files`
-- `top_level_shape`
-- `operation_type_validation`
-- `continuity_validation`
-- `evidence_anchor_validation`
-- `equipment_scope_validation`
-- `naming_consistency_validation`
-- `issues`
+- `operation_checks`
+- `missing_operations`
 - `revision_actions`
 
-Validation requirements:
+For each operation, check:
 
-1. Top-level keys must match `references/output-contract.md`.
-2. Every operation `Type` must match one exact lowercase value from `references/operation-types.md`.
-3. Combined actions such as washing-plus-drying must be split when the source treats them as sequential procedural steps.
-4. Every later-used intermediate must have a defined origin.
-5. Every explicit parameter must be traceable to at least one evidence segment.
-6. Instruments and containers must stay inside preparation scope.
-7. If protocol relevance is `partial_protocol_found` or `no_protocol_found`, the final JSON must explain why the workflow is incomplete or absent.
-8. If `status` is `fail`, go back to Phase 3 or Phase 4, revise the draft artifacts, and regenerate `05_validation_report.json`.
+- at least one evidence anchor exists
+- operation order matches the source
+- parameters match the source
+- `Type` matches the controlled list exactly
+- `belongto` points to one valid stage name
+- `relationship` matches `Stages[].depends_on`
 
-### Phase 6: Finalize JSON
+If audit fails, revise the skeleton or details and regenerate the audit report.
 
-Return one final JSON only after the continuity audit passes.
+## Stage 6: Finalize
 
-The final JSON must be concise, mechanically readable, and consistent in naming across all steps.
+Write `dataset/<Protocol>.json` only after `05_validation_report.json` passes.
 
-Inputs:
+Rules:
 
-- `04_protocol_details.json`
-- `05_validation_report.json` with `status = pass`
+- the filename stem must exactly match the final `Protocol` field
+- finalize from the validated draft, not from memory
+- do not emit a final JSON when audit fails
 
-Output file:
+The final JSON should remain minimal and should not duplicate diagnostic fields
+already captured in `01_scope.json` or `05_validation_report.json`.
 
-- `dataset/output/protocol_orchestrator/<markdown_stem>/06_final_protocol.json`
+## Dependency Guidance
 
-Finalization rules:
+Use stage dependencies only for large preparation phases, not for every single
+operation.
 
-- `06_final_protocol.json` must be a clean final copy of the validated protocol.
-- Do not finalize from memory alone; finalize from the validated draft artifact.
-- Do not skip `05_validation_report.json`.
-- If validation failed, no final JSON should be emitted for that run.
+Good serial example:
 
-## Naming Rules
+- `ODMA Synthesis` -> `Precursor Mixing` -> `Hydrogel Formation`
 
-- Use concise English names.
-- Keep the same intermediate name across all later references.
-- Do not rename an intermediate product unless the paper clearly indicates a new state or product.
-- Protocol names should describe the main material system and end with `_protocol`.
+Good parallel example:
 
-## Operation Typing Rules
+- `PRP Preparation` and `GelMA Synthesis` can run in parallel
+- both must finish before `Precursor Preparation`
 
-- Use only the controlled operation list from `references/operation-types.md`.
-- Choose the narrowest valid type.
-- Do not invent a new type because the wording in the paper is unusual.
-- If a step contains multiple actions, split the step unless the paper clearly treats them as a single inseparable operation.
-- Use the exact lowercase spelling from `references/operation-types.md`; do not change case, spacing, or hyphenation.
+Parallel detection should come from source evidence such as:
+
+- independent upstream preparation branches
+- separate precursor or component preparation sections
+- later merge steps that consume outputs from more than one earlier branch
+
+Do not create a parallel group only because two stages look logically
+independent. The paper must support that reading.
 
 ## What To Avoid
 
-- Do not collapse a multi-step protocol into one large summary step unless the source itself is only that coarse.
-- Do not import materials, containers, or devices from the shot example.
-- Do not infer missing concentrations, volumes, temperatures, or times.
-- Do not silently merge distinct intermediates.
-- Do not include analysis or assay procedures as preparation operations unless they directly prepare the final material.
-
-## Preferred Output Discipline
-
-Think in this order:
-
-1. conversion
-2. scope
-3. evidence
-4. skeleton
-5. details
-6. audit
-7. final JSON
-
-If needed, keep intermediate reasoning artifacts outside the final answer, but do not skip the audit stage.
-
-## Execution Order Summary
-
-When this skill is invoked, follow this file flow:
-
-1. convert PDF to markdown if needed and write `00_conversion.json`
-2. read markdown and write `01_scope.json`
-3. extract evidence and write `02_evidence_segments.json`
-4. build ordered skeleton and write `03_protocol_skeleton.json`
-5. fill full protocol draft and write `04_protocol_details.json`
-6. validate against `references/output-contract.md` and `references/operation-types.md`, then write `05_validation_report.json`
-7. only if validation passes, write `06_final_protocol.json`
+- do not copy content from the shot examples
+- do not invent missing concentrations, times, temperatures, or ratios
+- do not merge distinct intermediates without source support
+- do not include characterization-only procedures as preparation steps
+- do not replace controlled operation types with free-form paraphrases

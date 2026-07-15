@@ -11,7 +11,7 @@ Validation note:
 - keep lowercase spelling and original hyphenation
 - do not replace a controlled type with a natural-language paraphrase
 
-## The 20 Recommended Types
+## The 25 Recommended Types
 
 1. `synthesis`
 2. `dissolution`
@@ -33,6 +33,11 @@ Validation note:
 18. `dialysis`
 19. `filtration`
 20. `sterilization`
+21. `centrifugation`
+22. `sonication`
+23. `emulsification`
+24. `thawing`
+25. `seeding`
 
 ## Mapping Guidance
 
@@ -116,21 +121,43 @@ Use specifically for filtration or membrane filtration.
 
 Use when sterilization is explicitly part of sample preparation.
 
+### `centrifugation`
+
+Use when a sample is centrifuged to separate phases, pellet solids, clarify
+supernatant, or concentrate a biological fraction.
+
+### `sonication`
+
+Use when ultrasound treatment is explicitly applied to disperse, exfoliate,
+degas, or homogenize a material system.
+
+### `emulsification`
+
+Use when droplets or emulsions are intentionally generated, including
+microfluidic droplet formation, shear-driven emulsification, or oil-water
+emulsion preparation.
+
+### `thawing`
+
+Use when a frozen reagent, intermediate, or biological sample is intentionally
+returned to a usable liquid or soft state before a later preparation step.
+
+### `seeding`
+
+Use when cells or other biological payloads are deliberately introduced onto or
+into a prepared scaffold, hydrogel, membrane, or substrate as part of sample
+preparation.
+
 ## Practical Rules
 
 - Prefer `uv-irradiation` over generic `crosslinking` when UV is explicit.
 - Prefer `immersion` over generic `synthesis` for RSF/CHI soaking-style steps.
 - Prefer `drying` or `washing` as separate steps when the paper gives them explicit procedural status.
+- Prefer `centrifugation` when the text explicitly uses centrifuge conditions
+  such as `g`, `rpm`, or pellet/supernatant handling.
+- Prefer `emulsification` over generic `dispersion` when the source explicitly
+  describes droplet generation or emulsion formation.
+- Prefer `thawing` when a frozen intermediate is deliberately brought back to a
+  workable state before later use.
 - If a step contains two sequential actions with distinct products, split it.
 - If the paper states a repeated cycle such as `(RSF/CHI)n`, represent the cycle explicitly in description and keep the operation types constrained to the list above.
-
-## Current Open Question
-
-This list is intentionally conservative. It may later need a few additional types such as:
-
-- `centrifugation`
-- `sonication`
-- `printing`
-- `seeding`
-
-Do not add them ad hoc inside extracted JSON until the controlled list is revised.

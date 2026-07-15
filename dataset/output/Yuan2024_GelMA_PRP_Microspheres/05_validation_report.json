@@ -1,0 +1,49 @@
+{
+  "validation_date": "2026-07-07",
+  "protocol": "Yuan2024_GelMA_PRP_Microsphere_Protocol",
+  "source_paper": "markdown/Small - 2024 - Yuan - Injectable GelMA Hydrogel Microspheres with Sustained Release of Platelet‐Rich Plasma for the.md",
+  "checks": [
+    {
+      "check": "All Stages have unique stage_name",
+      "status": "pass",
+      "detail": "5 stages: PRP Preparation, GelMA Synthesis, GelMA Precursor Preparation, PRP-Loaded Microsphere Fabrication, Composite Assembly."
+    },
+    {
+      "check": "All Operations[].belongto reference an existing stage_name",
+      "status": "pass",
+      "detail": "20 operations, each belongs to one of the 5 stages. Verified all references."
+    },
+    {
+      "check": "All Types are from the controlled operation-types list",
+      "status": "pass",
+      "detail": "Types used: centrifugation, transfer, mixing, incubation, filtration, thawing → cooling (corrected), dissolution, synthesis, dialysis, lyophilization, emulsification, uv-irradiation, washing. All are in the controlled list. Note: 'thawing' was originally used for the −80 °C freezing step; corrected to 'cooling' which is the appropriate controlled type."
+    },
+    {
+      "check": "relationship entries reference valid stage names",
+      "status": "pass",
+      "detail": "All from/to values in serial_dependencies and all entries in parallel_groups reference existing stage names."
+    },
+    {
+      "check": "Stages[].depends_on uses stage names directly",
+      "status": "pass",
+      "detail": "All depends_on arrays contain stage names matching other stages."
+    },
+    {
+      "check": "relationship derived from Stages[].depends_on",
+      "status": "pass",
+      "detail": "serial_dependencies: GelMA Synthesis→GelMA Precursor Preparation, GelMA Precursor Preparation→PRP-Loaded Microsphere Fabrication, PRP Preparation→PRP-Loaded Microsphere Fabrication, PRP-Loaded Microsphere Fabrication→Composite Assembly. parallel_groups: [PRP Preparation, GelMA Synthesis] — consistent with depends_on fields."
+    },
+    {
+      "check": "No extra top-level keys beyond protocol contract",
+      "status": "pass",
+      "detail": "Top-level keys: Protocol, Stages, Materials, Instruments, Containers, Operations, relationship — all conform to output-contract.md."
+    },
+    {
+      "check": "Missing information is explicitly noted",
+      "status": "pass",
+      "detail": "Unreported details: centrifugation speed for microsphere washing, UV irradiation wavelength/intensity, exact container types for several steps, exact PRP concentrations in composite hydrogel, and microfluidic device curing conditions (on-chip vs. post-collection). These are omitted or noted as 'not reported'."
+    }
+  ],
+  "overall_status": "pass",
+  "notes": "Protocol is complete with all major preparation stages captured. The paper provides sufficient detail for PRP isolation, GelMA synthesis, precursor preparation, microfluidic microsphere fabrication, and composite assembly. Some instrument parameters are not reported (UV specifics, centrifuge conditions for microsphere washing) and are marked accordingly."
+}
